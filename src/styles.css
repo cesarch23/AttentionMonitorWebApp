@@ -1,4 +1,32 @@
-/* You can add global styles to this file, and also import other style files */
+:root{
+    --primary-color-500:hsl(210, 100%, 37%);
+    --primary-color-hovered:hsl(212, 100%, 31%);
+    --color-grey-500: #464B53;
+}
+*{
+    box-sizing: border-box;
+}
+html{
+    
+    scroll-behavior: smooth;
+}
+html, body { 
+    height: 100%; 
+    
+}
+body { 
+    margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; 
+    background-color: #F5F7FB;
+    padding: 0;
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+}
+h2,h1,h3{
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+p{
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
+}
