@@ -11,7 +11,7 @@ export class TokenService {
     setCookie('token',token,{expires:365,path:'/'})
   }
   getToken(){
-    getCookie('token')
+    return getCookie('token')
   }
   removeToken(){
     removeCookie('token')
