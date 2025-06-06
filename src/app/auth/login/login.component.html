@@ -1,1 +1,105 @@
-<p>login works!</p>
+<div class="backgroud">
+    <div class="container">
+      <div class="header">
+        <h2>Iniciar sesión</h2>
+        <p>Por favor ingrese sus datos</p>
+      </div>
+      <div class="taps">
+        <mat-tab-group class="tap__group" dynamicHeight>
+          <mat-tab [disabled]="tabIsDisable" label="Estudiante"  class="tap__item" >
+            <form action="#" [formGroup]="loginFormStudent" class="form" (ngSubmit)="onSubmitStudent()">
+              <mat-form-field class="form__group">
+                <mat-label>Correo electrónico</mat-label>
+                <input
+                  matInput
+                  type="email"
+                  placeholder="Ingrese su correo electrónico"
+                  required
+                  formControlName="email"
+                  name="email"
+                  id="email"
+                />
+              </mat-form-field>
+              <mat-form-field class="form__group">
+                <mat-label>Contraseña</mat-label>
+                <input
+                  matInput
+                  type="password"
+                  placeholder="Ingrese su contraseña"
+                  required
+                  formControlName="password"
+                />
+              </mat-form-field>
+              @if (loginFormStudent.touched && loginFormStudent.invalid) {
+                <mat-error class="error" >
+                  Completa correctamente todos los campos
+                </mat-error>
+              }
+              <p class="forget__password"> Olvide mi contraseña</p>
+              <button type="submit"
+                mat-flat-button
+                class="form__button"
+                [disabled]=" loginFormStudent.touched && !loginFormStudent.valid "
+               >
+               @if(statusFormStudent!=='loading'){
+                    <span>Iniciar sesión</span>
+               }
+               @if(statusFormStudent==='loading'){
+                    <span class="loader"></span>
+               }
+              </button> 
+            </form>
+          </mat-tab>
+
+          <mat-tab label="Profesor" class="tap__item" [disabled]="tabIsDisable">
+            <form action="#" [formGroup]="loginFormTeacher" class="form" (ngSubmit)="onSubmitTeacher()">
+              <mat-form-field class="form__group">
+                <mat-label>Correo electrónico</mat-label>
+                <input
+                  matInput
+                  type="email"
+                  placeholder="Ingrese su correo electrónico"
+                  required
+                  formControlName="email"
+                  name="email"
+                  id="email"
+                />
+              </mat-form-field>
+              <mat-form-field class="form__group">
+                <mat-label>Contraseña</mat-label>
+                <input
+                  matInput
+                  type="password"
+                  placeholder="Ingrese su contraseña"
+                  required
+                  formControlName="password"
+                />
+              </mat-form-field>
+              @if (loginFormTeacher.touched && loginFormTeacher.invalid) {
+                <mat-error class="error" >
+                  Completa correctamente todos los campos
+                </mat-error>
+              }
+              <p class="forget__password"> Olvide mi contraseña</p>
+              <button type="submit"
+                mat-flat-button
+                class="form__button"
+                [disabled]=" loginFormTeacher.touched && !loginFormTeacher.valid "
+               >
+               @if(statusFormTeacher!=='loading'){
+                    <span>Iniciar sesión</span>
+               }
+               @if(statusFormTeacher==='loading'){
+                    <span class="loader"></span>
+               }
+              </button> 
+            </form>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+      <div class="form__or">
+        <hr> <span> O </span> <hr>
+      </div>
+       <p class="register">¿No tienes una cuenta? <span routerLink="/auth/register">Registrarse</span></p>
+    </div>
+</div>
