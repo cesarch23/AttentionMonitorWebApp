@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { setCookie,getCookie,removeCookie } from 'typescript-cookie'
 import { jwtDecode, JwtPayload} from 'jwt-decode'
+import { Role } from '../models/model.interface';
 @Injectable({
   providedIn: 'root'
 })
@@ -28,6 +29,17 @@ export class TokenService {
       return today.getTime() < tokenDate.getTime();
     }
     return false;
+
+  }
+  getUserRole():Role | null{
+    const token = getCookie('token');
+    if (!token) return null;
+    try {
+      const decoded = jwtDecode<{ role: Role }>(token);
+      return decoded.role || null;
+    } catch {
+      return null;
+    }
 
   }
 }
