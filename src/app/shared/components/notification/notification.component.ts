@@ -59,6 +59,9 @@ import { MatButtonModule } from '@angular/material/button';
       font-size: 20px;
       text-align: center;
     }
+    .custom-snackbar button{
+      border-color: #fff;
+    }
     .custom-snackbar.success button  { color:#dbf0dc;  }
     .custom-snackbar.error button    { color:#FFE4DB;  }
     .custom-snackbar.info button { color:#E8F4FD;  }
