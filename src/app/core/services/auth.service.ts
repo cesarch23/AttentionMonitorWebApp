@@ -1,10 +1,11 @@
-import { HttpClient, HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpErrorResponse, HttpResponse, HttpStatusCode } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { enviroment } from '../../../environments/environment';
 import { catchError, switchMap, tap, throwError } from 'rxjs';
 import { TokenService } from './token.service';
 import { UserRegister } from '../models/model.interface';
 import { Router } from '@angular/router';
+import { CACHING_ENABLED, EXPECT_TOKEN_IN_RESPONSE, setCachingEnabled } from '../interceptors/token.interceptor';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,10 @@ export class AuthService {
   ) { }
 
   login(email:string, password:string){
-    return this.http.post(`${this.BASE_URL}/auth/login`,{email,password},{observe:'response'})
+    return this.http.post(`${this.BASE_URL}/auth/login`,{email,password}, {
+      context: new HttpContext().set(EXPECT_TOKEN_IN_RESPONSE,true),
+      observe:'response'
+    })
     .pipe(
       tap({
         next:(resp)=>{
