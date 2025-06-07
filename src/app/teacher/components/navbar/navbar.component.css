@@ -5,11 +5,9 @@
   align-items: center;
 
   }
-  
-
-.navbar-container .navbar__toggle{
-  
-}
+  .navbar-container .navbar__toggle{
+    
+  }
 .navbar-container .navbar__toggle mat-icon{
   font-size: 20px;
   margin: 0;
@@ -31,7 +29,10 @@
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }
 .navbar-container  .navbar__item{
-    
+  color: var(--color-grey-400);
+}
+.navbar-container  .navbar__item.active{
+    color: var(--primary-color-500);
 }
 .navbar-container .navbar__profile mat-icon{
     font-size: 20px;
