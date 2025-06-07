@@ -21,7 +21,6 @@ export class TokenService {
     const token = getCookie('token');
     if(!token) return false;
     const decodeToken = jwtDecode<JwtPayload>(token);
-    console.log(" token decodificado ",decodeToken);
     if(decodeToken && decodeToken.exp){
       const today = new Date();
       const tokenDate = new Date(0);
@@ -42,4 +41,5 @@ export class TokenService {
     }
 
   }
+  
 }
