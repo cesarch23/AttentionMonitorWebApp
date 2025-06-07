@@ -1,5 +1,6 @@
 :root{
     --primary-color-500:hsl(210, 100%, 37%);
+    --primary-color-50:#E6EFF8;
     --primary-color-hovered:hsl(212, 100%, 31%);
     --color-grey-500: #464B53;
 }
@@ -15,10 +16,10 @@ html, body {
     
 }
 body { 
-    margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; 
-    background-color: #F5F7FB;
     padding: 0;
-
+    margin: 0;
+    font-family: Roboto, sans-serif; 
+    background-color: var(--primary-color-50);
 }
 h2,h1,h3{
     text-align: center;
