@@ -1,1 +1,19 @@
-<p>navbar works!</p>
+<div class="navbar-container mobile">
+  <button class="navbar__toggle" mat-button aria-label="hamburguer button" (click)="toggleNavbar()" > 
+    <mat-icon>menu</mat-icon>
+  </button>
+  <nav class="navbar " [ngClass]="showMenu ? 'active' : '' " >
+    <button class="navbar__item" mat-button routerLink="/admin/home" routerLinkActive="active" >Home</button>
+    <button class="navbar__item" mat-button routerLink="/admin/dashboard" routerLinkActive="active">Dashboard</button>
+    <button class="navbar__item" mat-button routerLink="/admin/sesiones" routerLinkActive="active">Sesiones</button>
+    <button class="navbar__item" mat-button routerLink="/admin/cursos" routerLinkActive="active">Cursos</button>
+  </nav>
+  <button mat-button [matMenuTriggerFor]="menu" aria-label="profile" class="navbar__profile">
+    <mat-icon>account_circle</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item routerLink="/admin/cuenta" >Cuenta</button>
+    <button mat-menu-item (click)="logout()" >Cerrar sesión</button>
+  </mat-menu>
+</div>
+
