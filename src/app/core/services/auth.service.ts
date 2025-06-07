@@ -1,7 +1,7 @@
 import { HttpClient, HttpContext, HttpErrorResponse, HttpResponse, HttpStatusCode } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { enviroment } from '../../../environments/environment';
-import { catchError, switchMap, tap, throwError } from 'rxjs';
+import { catchError, retry, switchMap, tap, throwError } from 'rxjs';
 import { TokenService } from './token.service';
 import { StudentProfile, TeacherProfile, UserRegister } from '../models/model.interface';
 import { Router } from '@angular/router';
@@ -79,13 +79,19 @@ export class AuthService {
     if(role==='ESTUDIANTE')
       return this.http.get<StudentProfile>(`${this.BASE_URL}/estudiantes/profile`,{context: setCachingEnabled()})
       .pipe(
-        tap(profile=> this.studentSignal.set(profile)),
+        retry(2),
+        tap(profile=> {
+          this.studentSignal.update(()=>profile)
+        }),
         this.handleProfileError
       );
     else if(role==='PROFESOR')
       return this.http.get<TeacherProfile>(`${this.BASE_URL}/profesores/profile`,{context: setCachingEnabled()})
       .pipe(
-        tap(profile=> this.teacherSignal.set(profile)),
+        retry(2),
+        tap(profile=> {
+           this.teacherSignal.update(()=>profile)
+          }),
         this.handleProfileError
       );
     else
