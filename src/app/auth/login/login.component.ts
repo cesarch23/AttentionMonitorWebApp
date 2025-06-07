@@ -59,7 +59,8 @@ export class LoginComponent {
           this.statusFormStudent = 'failed';
         },
         complete:()=> this.statusFormStudent = 'init'
-      }); 
+      });
+      this.loginFormStudent.reset(); 
 
   }
    
@@ -79,5 +80,6 @@ export class LoginComponent {
         },
         complete:()=> this.statusFormTeacher = 'init'
       });
+      this.loginFormTeacher.reset();
   }
 }
