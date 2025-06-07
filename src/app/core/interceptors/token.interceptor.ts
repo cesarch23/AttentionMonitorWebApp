@@ -20,10 +20,8 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
 
   if(!req.context.get(CACHING_ENABLED)){
     const isValidToken = tokenService.isValidToken();
-    console.log("isValidToken", isValidToken);
     if(isValidToken){
       const token = tokenService.getToken();
-      console.log("token interceptor", token);
       if(token){
         const newRequest = req.clone({
           headers: req.headers.set('Authorization', `Bearer ${token}`)
