@@ -1,6 +1,7 @@
-export type RequestStatus= 'init' | 'failed' | 'sucess' | 'loading'
+export type RequestStatus= 'init' | 'failed' | 'success' | 'loading'
 export type Gender = 'masculino' | 'femenino'
 export type Role = 'ESTUDIANTE' | 'PROFESOR' 
+
 export interface UserRegister{
     email:string;
     password:string;
@@ -28,4 +29,25 @@ export interface TeacherProfile extends UserProfile {
 }
 export interface StudentProfile extends UserProfile{
     studentId:string;
+}
+export interface Session {
+
+    sessionId: string;
+    description: string;
+    startHours: string; // format HH:mm:ss
+    endHours: string; // format HH:mm:ss
+    sessionDurationMinutes: number;
+    date: string; // YYYY-MM-DD
+    numberStudentConected: number;
+    course: Course;  
+}
+export interface SessionRegister {
+    description: string;
+    startHours: string;  
+    endHours: string; 
+    sessionDurationMinutes: number;
+    date: string;  
+    course: {
+        courseId: string;
+    }
 }
