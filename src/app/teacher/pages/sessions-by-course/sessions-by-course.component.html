@@ -1,0 +1,36 @@
+<div class="sessions">
+    <div class="sessions__header">
+        <h6 class="sessions__title">
+            Lista de sesiones del curso de 
+            {{ courseName() || '...'}}
+        </h6>
+        
+        <button class="sessions_add-button" mat-flat-button >
+                Crear sesión
+                <mat-icon>add</mat-icon>
+        </button>
+        
+    </div>
+    <div class="sessions__content">
+        @if(sessionStatus ===  'loading'){
+            <span class="loader"></span>
+        }
+        @else if(sessionStatus ===  'failed'){
+            <p class="text-error"> Ocurrió un error inesperado. Por favor, utilice la opción "Sesiones" en la barra de navegación para intentar nuevamente. </p>
+        }
+        @else if(sessionStatus ===  'success'){
+            @if (sessions.length > 0) {
+                 <div class="sessions__table">
+                   <teacher-sessions-table [sessions]="sessions" ></teacher-sessions-table>
+                </div>
+            }
+            @else {
+                <p class="text-info"> No cuenta con sesiones para mostrar </p>
+            }
+           
+        }
+        
+        
+        
+    </div>
+</div>
