@@ -5,7 +5,7 @@
             {{ courseName() || '...'}}
         </h6>
         
-        <button class="sessions_add-button" mat-flat-button >
+        <button class="sessions_add-button" mat-flat-button (click)="openToAddSessionDialog()" >
                 Crear sesión
                 <mat-icon>add</mat-icon>
         </button>
@@ -21,7 +21,7 @@
         @else if(sessionStatus ===  'success'){
             @if (sessions.length > 0) {
                  <div class="sessions__table">
-                   <teacher-sessions-table [sessions]="sessions" ></teacher-sessions-table>
+                   <teacher-sessions-table [filter]="true" [courseId]="courseId!" ></teacher-sessions-table>
                 </div>
             }
             @else {

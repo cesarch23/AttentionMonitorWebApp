@@ -9,6 +9,8 @@ import { TeacherNavbarComponent } from "../../components/navbar/navbar.component
 import { SessionsTableComponent } from "../../components/sessions-table/sessions-table.component";
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { SessionDialogComponent } from '../../components/session-dialog/session-dialog.component';
 
 @Component({
   selector: 'app-sessions-by-course',
@@ -27,10 +29,12 @@ export class SessionsByCourseComponent implements OnInit {
   sessionServ =  inject(SessionsService)
   notification = inject(NotificationService);
   route = inject(ActivatedRoute);
+    private dialog = inject(MatDialog);
 
   courseId:string | null = null;
   teacher$ = this.authServ.teacherProfile$;
   sessions: Session[] = [];
+  // sessions = this.sessionServ.sessions$;
   sessionStatus:RequestStatus = 'init';
   courseName = signal<string | null>(null)
   constructor(){
@@ -51,7 +55,8 @@ export class SessionsByCourseComponent implements OnInit {
     ).subscribe({
           next: (sessions) => {
             this.sessionStatus = 'success';
-            this.sessions = sessions.filter(sesion=>sesion.course.courseId===this.courseId);
+            // this.sessions = sessions.filter(sesion=>sesion.course.courseId===this.courseId);
+            this.sessions = sessions;
           },
           error: (messageError) => {
             this.sessionStatus = 'failed';
@@ -63,6 +68,14 @@ export class SessionsByCourseComponent implements OnInit {
     })
   }
 
+  openToAddSessionDialog(){
+    this.dialog.open(SessionDialogComponent,{
+      data:{
+        title:'Agregar sesión',
+        isEdit:false
+      }
+    })
+  }
 
 
 
