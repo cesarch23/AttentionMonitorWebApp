@@ -2,7 +2,4 @@ table{
     width: 100%;
     overflow-x: auto;
 }
-table .acciones{
-    display: flex;
-    gap: 4px;
-}
+ 
