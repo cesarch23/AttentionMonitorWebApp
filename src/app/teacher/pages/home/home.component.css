@@ -43,7 +43,7 @@
         text-align: left;
     }
     .home__container .courses{
-        grid-template-columns: repeat(auto-fit, minmax(292px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(292px, 292px));
     }
     .home__container .courses .course{
         width: 100%;

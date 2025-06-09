@@ -3,6 +3,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { CourseService } from '../../../core/services/courses.service';
 
 @Component({
   selector: 'app-home',
