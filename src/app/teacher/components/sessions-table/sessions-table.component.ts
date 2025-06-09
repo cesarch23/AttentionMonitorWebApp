@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, inject, input, signal, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
@@ -10,6 +10,9 @@ import { SessionStatusPipe } from '../../../core/pipes/session-status.pipe';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import {MatTooltip} from '@angular/material/tooltip';
+import { MatDialog } from '@angular/material/dialog';
+import { SessionDialogComponent } from '../session-dialog/session-dialog.component';
+import { SessionsService } from '../../../core/services/sessions.service';
 
 
 @Component({
@@ -31,15 +34,28 @@ import {MatTooltip} from '@angular/material/tooltip';
 })
 export class SessionsTableComponent implements AfterViewInit {
 
-  sessions = input<Session[]>([])
+  // sessions = input<Session[]>([])
+  
+  filter = input<boolean>(false)
+  courseId = input<string>("")
   sessionColumns = ['codigo','curso','nombre','fechaCreacion','duracion','estado','cantidadAlumnoConectados','acciones'] 
+  private dialog = inject(MatDialog);
+  private sessionServ = inject(SessionsService);
+  
+  sessions = this.sessionServ.sessions$
   sessionDataSource = new MatTableDataSource<Session>( this.sessions() )
-
+  
   constructor(){
-    console.log("recibido de sesiones",this.sessions())
+   
   }
   ngOnInit(): void {
-     this.sessionDataSource.data = this.sessions()
+    if(this.filter()){
+      this.sessionDataSource.data = this.sessions().filter(sesion=>sesion.course.courseId===this.courseId());
+      console.log("sesiones ", this.sessionDataSource.data)
+    }else{
+      this.sessionDataSource.data = this.sessions()
+      console.log("sesiones ", this.sessionDataSource.data)
+    }
   }
   @ViewChild('MatPaginator2') paginator?: MatPaginator
   @ViewChild(MatSort) sort?:MatSort
@@ -48,5 +64,29 @@ export class SessionsTableComponent implements AfterViewInit {
     this.sessionDataSource.paginator = this.paginator ? this.paginator : null;
     this.sessionDataSource.sort= this.sort ? this.sort : null;
   }
+  openToEditSessionDialog(session:Session){
+    const { 
+      sessionId,course,date,
+      description,endHours,
+      numberStudentConected,
+      sessionDurationMinutes,
+      startHours } = session;
+    this.dialog.open(SessionDialogComponent,{
+      data: {
+         sessionId: sessionId,
+         description:description,
+         startHours:startHours,
+         endHours:endHours,
+         sessionDurationMinutes:sessionDurationMinutes,
+         date:date,
+         numberStudentConected:numberStudentConected,
+         course:course,
+         title:'Actualizar sesión',
+         isEdit:true
+      }
+    })
+    
+  }
+  
 
 }
