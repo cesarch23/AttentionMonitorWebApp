@@ -1,9 +1,9 @@
 import { HttpClient, HttpContext, HttpErrorResponse, HttpResponse, HttpStatusCode } from '@angular/common/http';
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, ɵsetCurrentInjector } from '@angular/core';
 import { enviroment } from '../../../environments/environment';
 import { catchError, retry, switchMap, tap, throwError } from 'rxjs';
 import { TokenService } from './token.service';
-import { StudentProfile, TeacherProfile, UserRegister } from '../models/model.interface';
+import { Course, StudentProfile, TeacherProfile, UserRegister } from '../models/model.interface';
 import { Router } from '@angular/router';
 import { EXPECT_TOKEN_IN_RESPONSE, setCachingEnabled } from '../interceptors/token.interceptor';
 
@@ -101,5 +101,7 @@ export class AuthService {
   private handleProfileError = catchError((error: HttpErrorResponse) => {
     return throwError(() => new Error('Ups algo salió mal, inténtelo más tarde'));
   });
+
+  
 
 }
