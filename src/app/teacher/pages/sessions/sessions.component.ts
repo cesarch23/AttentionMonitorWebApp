@@ -51,13 +51,10 @@ export class SessionsComponent implements OnInit {
           isEdit:false
         }
       }).afterClosed().subscribe((result: { session?:Session;updated:boolean; inserted:boolean}={inserted:false,updated:false})=>{
-        //insertar 
         if(result.inserted && result.session){
           const pastSession= structuredClone(this.sessions)
           this.sessions = [result.session,...pastSession]
         }
-        console.log("results recibidos",result)
-        //actualizar
       })
     }
 
