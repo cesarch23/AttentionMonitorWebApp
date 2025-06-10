@@ -32,4 +32,6 @@
     width: 100%;
     height: calc(100dvh - 64px - 16px - 32px);
     border-radius: 8px;
+    padding-right: 4px;
+    padding-bottom: 8px;
 }
