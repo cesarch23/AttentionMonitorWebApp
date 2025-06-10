@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import { enviroment } from '../../../environments/environment';
 import { setCachingEnabled } from '../interceptors/token.interceptor';
 import { Course } from '../models/model.interface';
-import { catchError, retry, tap, throwError } from 'rxjs';
+import { catchError, retry, switchMap, tap, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +21,16 @@ export class CourseService {
 
    getCoursesByTeacherId() {
     const teacherId = this.authService.teacherProfile$()?.teacherId;
-    console.log("geacher id",teacherId)
+    if(!teacherId){
+      return this.authService.getTeacherProfile()
+      .pipe(
+        switchMap(profile=> this.sendRequest(profile.teacherId))
+      )
+    }
+    return this.sendRequest(teacherId);
+    
+  }
+  private sendRequest(teacherId:string){
     return this.http.get<Course[]>(`${this.url}/${teacherId}`, { context: setCachingEnabled() })
     .pipe(
       retry(1),
