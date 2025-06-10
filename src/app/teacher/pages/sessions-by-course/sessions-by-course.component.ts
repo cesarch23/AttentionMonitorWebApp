@@ -29,12 +29,11 @@ export class SessionsByCourseComponent implements OnInit {
   sessionServ =  inject(SessionsService)
   notification = inject(NotificationService);
   route = inject(ActivatedRoute);
-    private dialog = inject(MatDialog);
+  private dialog = inject(MatDialog);
 
   courseId:string | null = null;
   teacher$ = this.authServ.teacherProfile$;
   sessions: Session[] = [];
-  // sessions = this.sessionServ.sessions$;
   sessionStatus:RequestStatus = 'init';
   courseName = signal<string | null>(null)
   constructor(){
@@ -55,15 +54,11 @@ export class SessionsByCourseComponent implements OnInit {
     ).subscribe({
           next: (sessions) => {
             this.sessionStatus = 'success';
-            // this.sessions = sessions.filter(sesion=>sesion.course.courseId===this.courseId);
-            this.sessions = sessions;
+            this.sessions = structuredClone(sessions)
           },
           error: (messageError) => {
             this.sessionStatus = 'failed';
             this.notification.show("Ups ocurrio error, intente más tarde",'error');
-          },
-          complete: ()=>{
-            this.sessionStatus = 'init'
           }
     })
   }
