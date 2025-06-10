@@ -23,7 +23,7 @@ export class SessionsService {
   getSessionsByTeacherId() {
     const teacherId = this.authService.teacherProfile$()?.teacherId;
     if(!teacherId){
-      return this.http.get<TeacherProfile>(`${enviroment.BASE_URL}/profesores/profile`,{context: setCachingEnabled()})
+      return this.authService.getTeacherProfile()
       .pipe(
         switchMap(profile=>{
           return this.http.get<Session[]>(`${this.url}/profesor/${profile.teacherId}`, { context: setCachingEnabled() })
