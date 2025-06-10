@@ -84,6 +84,7 @@ export class SessionDialogComponent implements OnInit {
     }
     else{
       //agregar
+      
       this.sessionServ.add(
         {
           description,
@@ -93,10 +94,10 @@ export class SessionDialogComponent implements OnInit {
           startHours,
           course:{courseId}
         }).subscribe({
-          next:()=>{
+          next:(session)=>{
             this.sessionRquestStatus = 'success'
             this.notificationServ.show('Se agrego con exito la session','success')
-            this.dialogRef.close()
+            this.dialogRef.close({session,updated:false,inserted:true})
             this.router.navigateByUrl('admin/sesiones')
             this.sessionForm.reset()
           },
