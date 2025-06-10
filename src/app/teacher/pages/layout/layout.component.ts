@@ -13,7 +13,7 @@ import { AuthService } from '../../../core/services/auth.service';
 export class LayoutComponent {
   private authServ = inject(AuthService);
   constructor(){
-    this.authServ.getProfile().subscribe();
+    this.authServ.getTeacherProfile().subscribe();
   }
   ngOnDestroy(): void {
     this.authServ.logout();
