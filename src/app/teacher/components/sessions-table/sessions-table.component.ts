@@ -43,7 +43,7 @@ export class SessionsTableComponent implements AfterViewInit,OnInit {
   sessionDataSource = new MatTableDataSource<Session>()
   
   constructor(){
-    console.log("iniciando el componente de la tabla")
+    console.log("iniciando el componente de la tabla",this.sessions())
     effect(() => {
       const sessions = this.sessions();     
       const filter = this.filter();       
