@@ -38,7 +38,7 @@
               <th mat-header-cell *matHeaderCellDef class="sticky"> Acciones </th>
               <td mat-cell *matCellDef="let element" class="acciones"> 
                 <button matTooltip="editar"    color="primary"    mat-icon-button aria-label="editar" (click)="openToEditSessionDialog(element)" ><mat-icon>edit</mat-icon></button>     
-                <button matTooltip="eliminar"  color="warn"    mat-icon-button aria-label="eliminar" ><mat-icon>delete</mat-icon></button>     
+                <button matTooltip="eliminar"  color="warn"    mat-icon-button aria-label="eliminar" (click)="deleteSession(element)" > <mat-icon>delete</mat-icon></button>     
                 <button matTooltip="ver dashboard" mat-icon-button aria-label="ver"  ><mat-icon>visibility</mat-icon></button>     
               </td>
             </ng-container>

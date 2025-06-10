@@ -13,6 +13,8 @@ import {MatTooltip} from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
 import { SessionDialogComponent } from '../session-dialog/session-dialog.component';
 import { DatePipe } from '@angular/common';
+import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
+import { DeleteSessionDialogComponent } from '../delete-session-dialog/delete-session-dialog.component';
 
 
 @Component({
@@ -93,8 +95,30 @@ export class SessionsTableComponent implements AfterViewInit,OnInit {
          title:'Actualizar sesión',
          isEdit:true
       }
+    }).afterClosed().subscribe((result: { session?:Session;updated:boolean; inserted:boolean}={inserted:false,updated:false})=>{
+        if(result.updated && result.session){
+          console.log('updatesd resul',result)
+           
+          const updatedSession = result.session;
+          const updatedSessions = this.sessions().map(s =>{
+                if(s.sessionId === updatedSession.sessionId){
+                  s = {...updatedSession}
+                }
+                return s;
+              }
+            );
+            this.sessionDataSource.data = structuredClone(updatedSessions);
+          // this.sessions = [result.session,...pastSession]
+        }
     })
     
+  }
+  deleteSession(session:Session){
+    this.dialog.open(DeleteSessionDialogComponent,{data:{session}}).afterClosed().subscribe((result: {delete:boolean}={delete:false})=>{
+        if(result.delete){
+             this.sessionDataSource.data = this.sessionDataSource.data.filter(s=>s.sessionId!==session.sessionId)
+          }
+      });
   }
   
 
