@@ -72,35 +72,42 @@ export class AuthService {
     this.studentSignal.set(null);
     this.router.navigate(['/auth/login'])
   }
-  getProfile(){
-    const token = this.tokenService.getToken();
-    if(!token) return throwError(()=> new Error('Rol de usuario no reconocido'));
-    const role = this.tokenService.getUserRole();
-    if(role==='ESTUDIANTE')
-      return this.http.get<StudentProfile>(`${this.BASE_URL}/estudiantes/profile`,{context: setCachingEnabled()})
-      .pipe(
-        retry(2),
-        tap(profile=> {
-          this.studentSignal.update(()=>profile)
-        }),
-        this.handleProfileError
-      );
-    else if(role==='PROFESOR')
-      return this.http.get<TeacherProfile>(`${this.BASE_URL}/profesores/profile`,{context: setCachingEnabled()})
+  // getProfile(){
+  //   const token = this.tokenService.getToken();
+  //   if(!token) return throwError(()=> new Error('Rol de usuario no reconocido'));
+  //   const role = this.tokenService.getUserRole();
+  //   if(role==='ESTUDIANTE')
+  //     return this.getStudentProfile()
+  //   else if(role==='PROFESOR')
+  //     return this.getTeacherProfile();
+  //   else
+  //     return throwError(()=> new Error('Rol de usuario no reconocido'));
+  // }
+  getTeacherProfile(): Observable<TeacherProfile> {
+     return this.http.get<TeacherProfile>(`${this.BASE_URL}/profesores/profile`,{context: setCachingEnabled()})
       .pipe(
         retry(2),
         tap(profile=> {
            this.teacherSignal.update(()=>profile)
           }),
-        this.handleProfileError
+        catchError((error: HttpErrorResponse) => {
+          return throwError(() => new Error('Ups algo salió mal, inténtelo más tarde'));
+        })
       );
-    else
-      return throwError(()=> new Error('Rol de usuario no reconocido'));
+  }
+  getStudentProfile(){
+    return this.http.get<StudentProfile>(`${this.BASE_URL}/estudiantes/profile`,{context: setCachingEnabled()})
+      .pipe(
+        retry(2),
+        tap(profile=> {
+          this.studentSignal.update(()=>profile)
+        }),
+        catchError((error: HttpErrorResponse) => {
+          return throwError(() => new Error('Ups algo salió mal, inténtelo más tarde'));
+        })
+      );
   }
 
-  private handleProfileError = catchError((error: HttpErrorResponse) => {
-    return throwError(() => new Error('Ups algo salió mal, inténtelo más tarde'));
-  });
 
   
 
