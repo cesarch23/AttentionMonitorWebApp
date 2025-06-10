@@ -1,0 +1,28 @@
+.course{
+    background-color: #fff;
+    padding: 24px;
+    font-weight: 500;
+    width: 100%;
+    min-width: min-content;
+}
+.course .course__header{
+    color: var(--color-grey-500);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom:24px;
+}
+.course .course__header .course__title{
+    text-wrap: balance;
+    text-align: left;
+    margin: 0;
+}
+.course .course__header .course_add-button{
+    border-radius: 8px;
+}
+.course .course__content{
+
+}
+.course .course__content .text-error{
+    color: hsl(0, 100%, 39%);
+}

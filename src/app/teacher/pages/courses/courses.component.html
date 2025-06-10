@@ -1,1 +1,34 @@
-<p>courses works!</p>
+<div class="course">
+    <div class="course__header">
+        <h6 class="course__title">
+            Lista de cursos
+        </h6>
+        
+        <button class="course_add-button" mat-flat-button (click)="openToAddCourseDialog()"  >
+                Crear curso
+                <mat-icon>add</mat-icon>
+        </button>
+        
+    </div>
+    <div class="course__content">
+        @if(courseStatus ===  'loading'){
+            <span class="loader"></span>
+        }
+        @else if(courseStatus ===  'failed'){
+            <p class="text-error"> Ocurrió un error inesperado. Por favor, recargue la pagina.
+                <br> Si persiste vuelva a iniciar sesión </p>
+        }
+        @else if(courseStatus ===  'success'){
+            @if (courses.length > 0) {
+                 <div  >
+                    <teacher-course-table [courses$]="courses"></teacher-course-table>
+                </div>
+            }
+            @else {
+                <p class="text-info"> No cuenta con cursos para mostrar </p>
+            }  
+             
+        }
+        
+    </div>
+</div>
