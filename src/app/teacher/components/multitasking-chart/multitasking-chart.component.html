@@ -1,0 +1,16 @@
+<mat-card class="card" appearance="raised">
+  <mat-card-header>
+    <mat-card-title>Multitasking de Estudiantes</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <canvas
+      baseChart
+      [data]="lineChartData"
+      [options]="lineChartOptions"
+      type="line">
+    </canvas>
+  </mat-card-content>
+   <mat-card-actions>
+    <button mat-button> <mat-icon>visibility</mat-icon> Ver detalles </button>
+  </mat-card-actions>
+</mat-card>
