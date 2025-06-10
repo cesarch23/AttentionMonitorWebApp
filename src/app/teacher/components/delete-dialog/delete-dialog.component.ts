@@ -27,8 +27,14 @@ export class DeleteDialogComponent {
         this.courseServ.deleteCourse(this.data.course.courseId).subscribe({
           next:(deleted =>{
             this.courseRequestStatus = 'success'
-            this.notificationServ.show('El curso fue eliminado','success')
-            this.dialogRef.close({delete:true})
+            if(deleted){
+              this.notificationServ.show('El curso fue eliminado','success')
+              this.dialogRef.close({delete:true})
+            }else{
+              this.courseRequestStatus = 'failed'
+              this.notificationServ.show('El curso no fue eliminado','error')
+            }
+
           }),
           error:(errorMessage)=>{
             this.courseRequestStatus = 'failed'
