@@ -4,12 +4,12 @@
         <p class="text">
            Cargando...
         </p>
-    } @else if(teacher$()?.courses?.length === 0) {    
+    } @else if(courses$().length === 0) {    
         <p class="text">No tienes cursos creados.</p> 
 
-    } @else if (teacher$()?.courses!.length > 0) { 
+    } @else if (courses$().length > 0) { 
         <div class="courses">
-            @for (course of teacher$()?.courses; track $index) {
+            @for (course of courses$(); track $index) {
                 <div class="course">
                     <h6 class="course__name" >{{ course.name }}</h6>
                     <button class="course__button" mat-stroked-button [routerLink]="'/admin/sesiones/'.concat(course.courseId)">

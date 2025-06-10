@@ -19,10 +19,12 @@ import { CourseService } from '../../../core/services/courses.service';
 export class HomeComponent {
 
   private authServ = inject(AuthService);
+  private courseServ = inject(CourseService);
   teacher$ = this.authServ.teacherProfile$;
+  courses$ = this.courseServ.courses$
 
   ngOnInit(): void {
-    
+     this.courseServ.getCoursesByTeacherId().subscribe();
   }
   
   
