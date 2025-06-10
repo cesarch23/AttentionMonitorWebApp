@@ -26,7 +26,7 @@ export const TEACHER_ROUTES: Routes = [
             {
                 path: 'sesiones',
                 canActivate: [authGuard],
-                component: SessionsComponent
+                loadComponent: ()=> import('./pages/sessions/sessions.component').then(m=>m.SessionsComponent) 
             },
             {
                 path: 'sesiones/:courseId',
