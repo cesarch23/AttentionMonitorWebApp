@@ -16,7 +16,7 @@ export const TEACHER_ROUTES: Routes = [
             {
                 path: 'home',
                 canActivate: [authGuard],
-                component: HomeComponent
+                loadComponent: ()=>import('./pages/home/home.component').then(m=>m.HomeComponent) 
             },
             {
                 path: 'dashboard',
