@@ -4,7 +4,7 @@ import { HttpClient, HttpErrorResponse, HttpStatusCode } from '@angular/common/h
 import { enviroment } from '../../../environments/environment';
 import { Session, SessionRegister, TeacherProfile } from '../models/model.interface';
 import { setCachingEnabled } from '../interceptors/token.interceptor';
-import { BehaviorSubject, catchError, retry, switchMap, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, retry, switchMap, tap, throwError } from 'rxjs';
 import { getDurationInMinutes } from '../../shared/utils/time-range.validator';
 import { DateTime } from 'luxon';
 
@@ -66,6 +66,36 @@ export class SessionsService {
       catchError((error)=>{
         if(error.status === HttpStatusCode.Unauthorized){
           return throwError(()=> new Error('Credenciales inválidas. vuelve a iniciar sesión'))
+        }
+        return throwError(()=> new Error('Ups algo salio mal, intentelo más tarde'))
+      })
+    );
+  }
+  updateSesion(session:SessionRegister,sessionId:string){
+     return this.http.put<Session>(`${this.url}/${sessionId}`,{...session},{ context:setCachingEnabled() }).pipe(
+      tap((session: Session) => {
+        this.sessionsSignal.update((current)=> [...current,session]); 
+      }),
+      catchError((error)=>{
+        if(error.status === HttpStatusCode.Unauthorized){
+          return throwError(()=> new Error('Credenciales inválidas. vuelve a iniciar sesión'))
+        }
+        return throwError(()=> new Error('Ups algo salio mal, intentelo más tarde'))
+      })
+    );
+  }
+  deleteSesion(sessionId:string):Observable<Boolean>{
+     return this.http.delete<Boolean>(`${this.url}/${sessionId}`,{ context:setCachingEnabled() }).pipe(
+      tap((deleted) => {
+        if(deleted)
+            this.sessionsSignal.update((sessions)=>[...sessions.filter(s => s.sessionId !== sessionId)])
+      }),
+      catchError((error)=>{
+        if(error.status === HttpStatusCode.Unauthorized){
+          return throwError(()=> new Error('Credenciales inválidas. vuelve a iniciar sesión'))
+        }
+        if(error.status === HttpStatusCode.Conflict){
+            return throwError(()=> new Error('No se pudo eliminar,la sesion tiene registros asociados'))
         }
         return throwError(()=> new Error('Ups algo salio mal, intentelo más tarde'))
       })
