@@ -5,6 +5,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { tokenInterceptor } from './core/interceptors/token.interceptor';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
  
 
 const CUSTOM_FORMAT = {
@@ -27,6 +28,6 @@ export const appConfig: ApplicationConfig = {
     ),
     provideNativeDateAdapter(),
     { provide: MAT_DATE_FORMATS, useValue:CUSTOM_FORMAT },
-    { provide: MAT_DATE_LOCALE,useValue:'es-PE' },
+    { provide: MAT_DATE_LOCALE,useValue:'es-PE' }, provideCharts(withDefaultRegisterables()),
   ]
 };
