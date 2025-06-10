@@ -1,0 +1,32 @@
+.page{
+    
+    font-weight: 500;
+    width: 100%;
+    min-width: min-content;
+}
+.page .page__header{
+    background-color: #fff;
+    color: var(--color-grey-500);
+    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding:8px 16px;
+    border-radius: 8px;
+  
+}
+.page .page__header .page__group span{
+    color: var(--color-grey-500);
+    font-weight: 600;
+}
+.page .page__content{
+    padding-top: 16px;
+    /* background-color: rgb(233, 212, 255); */
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+.page .page__content .page__card{
+   
+}
