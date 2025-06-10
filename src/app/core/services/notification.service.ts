@@ -9,7 +9,7 @@ export class NotificationService {
   private matSnackBar = inject(MatSnackBar) 
   constructor() { }
 
-   show(message: string, type: 'success' | 'error' | 'info' | 'warning' = 'info', durationSeg = 3) {
+   show(message: string, type: 'success' | 'error' | 'info' | 'warning' = 'info', durationSeg = 5) {
     let icon: 'info' | 'warning' | 'error' | 'check' = 'info';
     
     if(type === 'success') icon = 'check';
