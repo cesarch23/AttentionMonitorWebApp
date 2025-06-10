@@ -97,17 +97,14 @@ export class SessionDialogComponent implements OnInit {
           next:(session)=>{
             this.sessionRquestStatus = 'success'
             this.notificationServ.show('Se agrego con exito la session','success')
+            this.sessionForm.reset()
             this.dialogRef.close({session,updated:false,inserted:true})
             this.router.navigateByUrl('admin/sesiones')
-            this.sessionForm.reset()
           },
           error:(errorMessage)=>{
             this.sessionRquestStatus = 'failed'
             this.notificationServ.show(errorMessage,'error')
             
-          },
-          complete:()=>{
-            this.sessionRquestStatus = 'init'
           }
 
         })

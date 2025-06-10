@@ -46,7 +46,7 @@
                 Cancelar
             </button>
             <button type="submit" cdkFocusInitial mat-button class="form__button"
-                [disabled]=" sessionForm.touched && !sessionForm.valid "
+                [disabled]=" (sessionForm.touched && !sessionForm.valid) || this.sessionRquestStatus ==='loading' "
                 (click)="sendSession()"
                 >
                 {{ data.isEdit ? 'Guardar cambios':'Agregar' }}
