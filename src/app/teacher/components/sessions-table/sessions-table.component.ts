@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, inject, input, signal, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, effect, inject, Input, input, OnInit, signal, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
@@ -12,7 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
 import {MatTooltip} from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
 import { SessionDialogComponent } from '../session-dialog/session-dialog.component';
-import { SessionsService } from '../../../core/services/sessions.service';
+import { DatePipe } from '@angular/common';
 
 
 @Component({
@@ -24,45 +24,54 @@ import { SessionsService } from '../../../core/services/sessions.service';
     MatIconModule,
     MatTooltip,
     MatButtonModule,
+    MatSort,
     MatSortModule,
     DurationPipe,
     SessionStatusPipe,
-    
+    DatePipe,
   ],
   templateUrl: './sessions-table.component.html',
   styleUrl: './sessions-table.component.css'
 })
-export class SessionsTableComponent implements AfterViewInit {
+export class SessionsTableComponent implements AfterViewInit,OnInit {
 
-  // sessions = input<Session[]>([])
-  
+  sessions = input<Session[]>([])
   filter = input<boolean>(false)
   courseId = input<string>("")
-  sessionColumns = ['codigo','curso','nombre','fechaCreacion','duracion','estado','cantidadAlumnoConectados','acciones'] 
+  sessionColumns = ['sessionId','course','description','date','startHours','estado','numberStudentConected','acciones'] 
   private dialog = inject(MatDialog);
-  private sessionServ = inject(SessionsService);
-  
-  sessions = this.sessionServ.sessions$
-  sessionDataSource = new MatTableDataSource<Session>( this.sessions() )
+  sessionDataSource = new MatTableDataSource<Session>()
   
   constructor(){
-   
+    console.log("iniciando el componente de la tabla")
+    effect(() => {
+      const sessions = this.sessions();     
+      const filter = this.filter();       
+      const courseId = this.courseId();
+      const filtered = filter
+        ? sessions.filter(session => session.course.courseId === courseId)
+        : sessions;
+
+      this.sessionDataSource.data = [...filtered];
+    });
   }
   ngOnInit(): void {
-    if(this.filter()){
-      this.sessionDataSource.data = this.sessions().filter(sesion=>sesion.course.courseId===this.courseId());
-      console.log("sesiones ", this.sessionDataSource.data)
-    }else{
-      this.sessionDataSource.data = this.sessions()
-      console.log("sesiones ", this.sessionDataSource.data)
-    }
+    
   }
-  @ViewChild('MatPaginator2') paginator?: MatPaginator
+  @ViewChild(MatPaginator) paginator?: MatPaginator
   @ViewChild(MatSort) sort?:MatSort
-
+ 
   ngAfterViewInit(): void {
     this.sessionDataSource.paginator = this.paginator ? this.paginator : null;
     this.sessionDataSource.sort= this.sort ? this.sort : null;
+     this.sessionDataSource.sortingDataAccessor = (item, property) => {
+    switch (property) {
+      case 'course':
+        return item.course.name;
+      default:
+        return (item as any)[property];
+    }
+  };
   }
   openToEditSessionDialog(session:Session){
     const { 

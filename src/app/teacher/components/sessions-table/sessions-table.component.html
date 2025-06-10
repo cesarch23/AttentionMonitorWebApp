@@ -1,50 +1,56 @@
-<table mat-table [dataSource]="sessionDataSource" matSort>
+@if (sessions().length > 0) {
+    <table mat-table [dataSource]="sessionDataSource" matSort>
 
-        <ng-container matColumnDef="codigo">
-          <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Código </th>
-          <td mat-cell *matCellDef="let element"> {{element.sessionId }} </td>
-        </ng-container>
-        <ng-container matColumnDef="curso">
-          <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Curso </th>
-          <td mat-cell *matCellDef="let element"> {{element.course.name }} </td>
-        </ng-container>
-        <ng-container matColumnDef="nombre">
-          <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Nombre </th>
-          <td mat-cell *matCellDef="let element"> {{ element.description }} </td>
-        </ng-container>
-        <ng-container matColumnDef="fechaCreacion">
-          <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Fecha de creacion </th>
-          <td mat-cell *matCellDef="let element"> {{element.date}} {{element.startHours}} </td>
-        </ng-container>
-        <ng-container matColumnDef="duracion">
-          <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Duracion </th>
-          <td mat-cell *matCellDef="let element"> {{element.startHours | duration:element.endHours }} {{element.endHours +'-'+ element.startHours }} </td>
-        </ng-container>
+            <ng-container matColumnDef="sessionId">
+              <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Código </th>
+              <td mat-cell *matCellDef="let element"> {{element.sessionId }} </td>
+            </ng-container>
+            <ng-container matColumnDef="course">
+              <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Curso </th>
+              <td mat-cell *matCellDef="let element"> {{element.course.name }} </td>
+            </ng-container>
+            <ng-container matColumnDef="description">
+              <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Nombre </th>
+              <td mat-cell *matCellDef="let element"> {{ element.description }} </td>
+            </ng-container>
+            <ng-container matColumnDef="date">
+              <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Fecha de inicio </th>
+              <td mat-cell *matCellDef="let element"> {{element.date | date:'dd/MM/yyyy' }} {{element.startHours}} </td>
+            </ng-container>
+            <ng-container matColumnDef="startHours">
+              <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Duracion </th>
+              <td mat-cell *matCellDef="let element"> {{element.startHours | duration:element.endHours }} </td>
+            </ng-container>
 
-        <ng-container matColumnDef="estado">
-          <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Estado </th>
-          <td mat-cell *matCellDef="let element" class="row-buttons" >
-           {{ element.date | sessionStatus:element.startHours:element.endHours }}
-          </td>
-        </ng-container>
-        
-        <ng-container matColumnDef="cantidadAlumnoConectados">
-          <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Cantidad de conectados</th>
-          <td mat-cell *matCellDef="let element"> {{ element.numberStudentConected }} </td>
-        </ng-container>
-      
-        <ng-container matColumnDef="acciones">
-          <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Acciones </th>
-          <td mat-cell *matCellDef="let element" class="acciones"> 
-            <button matTooltip="editar"        mat-icon-button aria-label="editar" (click)="openToEditSessionDialog(element)" ><mat-icon>edit</mat-icon></button>     
-            <button matTooltip="eliminar"      mat-icon-button aria-label="eliminar" ><mat-icon>delete</mat-icon></button>     
-            <button matTooltip="ver dashboard" mat-icon-button aria-label="ver"  ><mat-icon>visibility</mat-icon></button>     
-          </td>
-        </ng-container>
- 
-        <tr mat-header-row *matHeaderRowDef="sessionColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: sessionColumns;"></tr>
-</table>
-<mat-paginator #MatPaginator2  [pageSizeOptions]="[4, 10, 20]" showFirstLastButtons
-      aria-label="Seleccione las paginas ">
-</mat-paginator>
+            <ng-container matColumnDef="estado">
+              <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Estado </th>
+              <td mat-cell *matCellDef="let element" class="row-buttons" >
+              {{ element.date | sessionStatus:element.startHours:element.endHours }}
+              </td>
+            </ng-container>
+            
+            <ng-container matColumnDef="numberStudentConected">
+              <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Cantidad de conectados</th>
+              <td mat-cell *matCellDef="let element"> {{ element.numberStudentConected }} </td>
+            </ng-container>
+          
+            <ng-container matColumnDef="acciones">
+              <th mat-header-cell *matHeaderCellDef class="sticky"> Acciones </th>
+              <td mat-cell *matCellDef="let element" class="acciones"> 
+                <button matTooltip="editar"        mat-icon-button aria-label="editar" (click)="openToEditSessionDialog(element)" ><mat-icon>edit</mat-icon></button>     
+                <button matTooltip="eliminar"      mat-icon-button aria-label="eliminar" ><mat-icon>delete</mat-icon></button>     
+                <button matTooltip="ver dashboard" mat-icon-button aria-label="ver"  ><mat-icon>visibility</mat-icon></button>     
+              </td>
+            </ng-container>
+    
+            <tr mat-header-row *matHeaderRowDef="sessionColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: sessionColumns;"></tr>
+    </table>
+    <mat-paginator  [pageSizeOptions]="[4, 10, 20]" showFirstLastButtons
+        aria-label="Seleccione las paginas ">
+    </mat-paginator>
+}
+@else {
+  <p class="text-info"> No cuenta con sesiones para mostrar </p>
+}  
+
