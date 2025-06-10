@@ -1,0 +1,31 @@
+.sessions{
+    background-color: #fff;
+    padding: 24px;
+    font-weight: 500;
+    width: 100%;
+    min-width: min-content;
+}
+.sessions .sessions__header{
+    color: var(--color-grey-500);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom:24px;
+}
+.sessions .sessions__header .sessions__title{
+    text-wrap: balance;
+    text-align: left;
+    margin: 0;
+}
+.sessions .sessions__header .sessions_add-button{
+    border-radius: 8px;
+}
+.sessions .sessions__content{
+
+}
+.sessions .sessions__content .text-error{
+    color: hsl(0, 100%, 39%);
+}
+.sessions .sessions__content .text-info{
+    color: var(--color-grey-400);
+}
