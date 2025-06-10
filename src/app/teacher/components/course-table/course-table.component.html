@@ -1,0 +1,25 @@
+ 
+    <table mat-table [dataSource]="courseDataSource" matSort>
+
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Nombre </th>
+              <td mat-cell *matCellDef="let element"> {{element.name }} </td>
+            </ng-container>
+            
+          
+            <ng-container matColumnDef="acciones">
+              <th mat-header-cell *matHeaderCellDef class="sticky"> Acciones </th>
+              <td mat-cell *matCellDef="let element" class="acciones"> 
+                <button matTooltip="editar"      color="primary"  mat-icon-button aria-label="editar" (click)="openToEditCourseDialog(element)" ><mat-icon>edit</mat-icon></button>     
+                <button matTooltip="eliminar"    color="warn"  mat-icon-button aria-label="eliminar" (click)="openDeleteDialog(element)" ><mat-icon>delete</mat-icon></button>     
+              </td>
+            </ng-container>
+    
+            <tr mat-header-row *matHeaderRowDef="courseColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: courseColumns;"></tr>
+    </table>
+    <mat-paginator  [pageSizeOptions]="[4, 10, 20]" showFirstLastButtons
+        aria-label="Seleccione las paginas ">
+    </mat-paginator>
+ 
+
