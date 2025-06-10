@@ -1,0 +1,29 @@
+<div class="dialog">
+    <div class="dialog__header">
+        <h3 mat-dialog-title class="dialog__title"> {{ data.title }} </h3>
+        <p class="dialog__subtitle">Por favor complete los campos requeridos</p>
+    </div>
+    <form mat-dialog-content class="form" [formGroup]="courseForm" (ngSubmit)="sendSession()">
+        <mat-form-field class="form__group">
+            <mat-label>Nombre</mat-label>
+            <input matInput type="text" placeholder="Ingrese el nombre" required formControlName="name"
+                name="name" id="name" />
+        </mat-form-field>
+         
+        @if (courseForm.touched && courseForm.invalid) {
+            <mat-error class="error"> Todos los campos son obligatorios </mat-error>
+        }
+        <div class="dialog__actions" mat-dialog-actions>
+            <button type="button" mat-button class="form__button"mat-dialog-close>
+                Cancelar
+            </button>
+            <button type="submit" cdkFocusInitial mat-button class="form__button"
+                [disabled]=" (courseForm.touched && !courseForm.valid) || this.courseRequestStatus === 'loading' "
+               
+                >
+                {{ data.isEdit ? 'Guardar cambios':'Agregar' }}
+            </button>
+        </div>
+
+    </form>
+</div>
