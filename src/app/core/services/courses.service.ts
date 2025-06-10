@@ -35,7 +35,7 @@ export class CourseService {
     .pipe(
       retry(1),
       tap((courses)=>{
-        this.coursesSignal.update(()=>[...courses])
+        this.coursesSignal.update(()=>courses)
         console.log(" curssos service ",courses)
       }),
       catchError((error:HttpErrorResponse)=>{
