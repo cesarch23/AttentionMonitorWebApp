@@ -80,11 +80,31 @@ export class SessionDialogComponent implements OnInit {
     this.sessionRquestStatus = 'loading'
     const {courseId,date,description,endHours,startHours } = this.sessionForm.getRawValue();
     if(this.data.isEdit){
-      //TODO actualizar
+        if(!this.data.sessionId) return;
+        this.sessionServ.updateSesion(
+        {
+          description,
+          date, 
+          endHours, 
+          sessionDurationMinutes:0,
+          startHours,
+          course:{courseId}
+        },this.data.sessionId).subscribe({
+          next:(session)=>{
+            this.sessionRquestStatus = 'success'
+            this.notificationServ.show('Se actualizo la sesion','success')
+            this.dialogRef.close({session,updated:true,inserted:false})
+            this.sessionForm.reset()
+            this.router.navigateByUrl('admin/sesiones')
+          },
+          error:(errorMessage)=>{
+            this.sessionRquestStatus = 'failed'
+            this.notificationServ.show(errorMessage,'error')
+          }
+
+        })
     }
     else{
-      //agregar
-      
       this.sessionServ.add(
         {
           description,
