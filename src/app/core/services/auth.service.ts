@@ -1,7 +1,7 @@
 import { HttpClient, HttpContext, HttpErrorResponse, HttpResponse, HttpStatusCode } from '@angular/common/http';
 import { Injectable, signal, ɵsetCurrentInjector } from '@angular/core';
 import { enviroment } from '../../../environments/environment';
-import { catchError, retry, switchMap, tap, throwError } from 'rxjs';
+import { catchError, Observable, retry, switchMap, tap, throwError } from 'rxjs';
 import { TokenService } from './token.service';
 import { Course, StudentProfile, TeacherProfile, UserRegister } from '../models/model.interface';
 import { Router } from '@angular/router';
