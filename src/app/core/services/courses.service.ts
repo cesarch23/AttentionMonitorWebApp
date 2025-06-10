@@ -74,7 +74,10 @@ export class CourseService {
   deleteCourse(courseId:string){
     return this.http.delete<Boolean>(`${this.url}/${courseId}`,{context:setCachingEnabled()}).pipe(
       retry(1),
-      tap(course=>this.coursesSignal.update((courses)=>[...courses.filter(c => c.courseId !== courseId)])),
+      tap(isDeleted=>{
+        if(isDeleted)
+          this.coursesSignal.update((courses)=>[...courses.filter(c => c.courseId !== courseId)])
+      }),
       catchError((error:HttpErrorResponse)=>{
         if(error.status === HttpStatusCode.Unauthorized){
             return throwError(()=> new Error('Credenciales inválidas. Verifica tu correo y contraseña'))
