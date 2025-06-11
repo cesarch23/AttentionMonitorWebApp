@@ -45,11 +45,11 @@
     <form class="form" [formGroup]="passwordForm" (ngSubmit)="updatePassword()">
         <mat-form-field class="form__group">
             <mat-label>Contraseña actual</mat-label>
-            <input type="text" matInput required  placeholder="Contraseña actual" formControlName="current">
+            <input type="password" matInput required  placeholder="Contraseña actual" formControlName="current">
         </mat-form-field>
         <mat-form-field class="form__group">
             <mat-label>Nueva contraseña</mat-label>
-            <input type="text" matInput required  placeholder="Contraseña nueva" formControlName="novel" >
+            <input type="password" matInput required  placeholder="Contraseña nueva" formControlName="novel" >
         </mat-form-field>
         <button  class="form__button" mat-flat-button type="submit" 
         [disabled]=" passwordForm.touched && !passwordForm.valid "
