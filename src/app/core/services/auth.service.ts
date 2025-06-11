@@ -102,6 +102,13 @@ export class AuthService {
     }
     return of(this.teacherProfile$());
   }
+  refreshStudentProfile(){
+    const studentId = this.studentProfile$()?.studentId;
+    if(!studentId){
+      return this.getStudentProfile();
+    }
+    return of(this.studentProfile$());
+  }
   getStudentProfile(){
     return this.http.get<StudentProfile>(`${this.BASE_URL}/estudiantes/profile`,{context: setCachingEnabled()})
       .pipe(
@@ -125,10 +132,10 @@ export class AuthService {
             return throwError(()=> new Error('Credenciales inválidas. vuelve a iniciar sesión'))
           }
           if(error.status === HttpStatusCode.NotFound){
-            return throwError(()=> new Error(error.message))
+            return throwError(()=> new Error('Ocurrio un error, vuelva a iniciar sesión'))
           }
           if(error.status === HttpStatusCode.Conflict){
-            return throwError(()=> new Error(error.message))
+            return throwError(()=> new Error('El email ya esta registrado'))
           }
           return throwError(() => new Error('Ups algo salió mal, inténtelo más tarde'));
         })
@@ -145,10 +152,10 @@ export class AuthService {
             return throwError(()=> new Error('Credenciales inválidas. vuelve a iniciar sesión'))
           }
           if(error.status === HttpStatusCode.NotFound){
-            return throwError(()=> new Error(error.message))
+            return throwError(()=> new Error('Ocurrio un error, vuelva a iniciar sesión'))
           }
           if(error.status === HttpStatusCode.Conflict){
-            return throwError(()=> new Error(error.message))
+            return throwError(()=> new Error('El email ya esta registrado'))
           }
           return throwError(() => new Error('Ups algo salió mal, inténtelo más tarde'));
         })
@@ -162,7 +169,21 @@ export class AuthService {
             return throwError(()=> new Error('Credenciales inválidas. vuelve a iniciar sesión'))
           }
           if(error.status === HttpStatusCode.NotFound){
-            return throwError(()=> new Error(error.message))
+            return throwError(()=> new Error('Ocurrio un error, vuelva a iniciar sesión'))
+          }
+          return throwError(() => new Error('Ups algo salió mal, inténtelo más tarde'));
+        })
+      );
+  }
+  updateStudentPassword(update: UpdatePassword,studentId:string ='0'){
+    return this.http.put<Boolean>(`${this.BASE_URL}/estudiantes/password/${studentId}`,update,{context: setCachingEnabled()})
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          if(error.status === HttpStatusCode.Unauthorized){
+            return throwError(()=> new Error('Credenciales inválidas. vuelve a iniciar sesión'))
+          }
+          if(error.status === HttpStatusCode.NotFound){
+            return throwError(()=> new Error('Ocurrio un error, vuelva a iniciar sesión'))
           }
           return throwError(() => new Error('Ups algo salió mal, inténtelo más tarde'));
         })
