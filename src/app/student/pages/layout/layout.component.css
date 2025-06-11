@@ -1,0 +1,37 @@
+.app{
+    display: grid;
+    grid-template-areas: "navbar"
+                         "content";
+    gap: 16px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    place-content: center;
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
+    padding: 16px 0;
+    
+}
+.menu{
+    grid-area: "navbar";
+    max-width: 1200px;
+    width: 100vw;
+    background-color: white;
+    border-radius: 8px;
+    
+    padding: 8px 16px;
+    height: 64px;
+    position: relative;
+}
+.content{
+    grid-area: "content"; 
+    align-self: center;
+    overflow-y: auto;
+    max-width: 1200px;
+    width: 100%;
+    height: calc(100dvh - 64px - 16px - 32px);
+    border-radius: 8px;
+    padding-right: 4px;
+    padding-bottom: 8px;
+}
