@@ -1,1 +1,13 @@
-<p>navbar works!</p>
+<div class="navbar-container mobile">
+  <nav class="navbar " >
+    <button class="navbar__item" mat-button routerLink="/estudiante/home" routerLinkActive="active" >Home</button>
+  </nav>
+  <button mat-button [matMenuTriggerFor]="menu" aria-label="profile" class="navbar__profile">
+    <mat-icon>account_circle</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item routerLink="/estudiante/cuenta" >Cuenta</button>
+    <button mat-menu-item (click)="logout()" >Cerrar sesión</button>
+  </mat-menu>
+</div>
+
