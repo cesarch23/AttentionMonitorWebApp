@@ -1,0 +1,38 @@
+.home{
+   display: flex;
+   flex-direction: column;
+   gap: 16px; 
+}
+.home .home__header{
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 8px 16px;
+    display: flex;
+    gap: 24px;
+    align-items: center;
+}
+.home .home__content{
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap:16px;
+}
+
+.home .home__content .home__camara-container{
+    background-color: #fff;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 8px 16px;
+}
+.home .home__content .home__actions-container{
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 8px 16px;
+}
+
+.home .home__content .home__actions-container .home__card .video{
+    width: 400px;
+    background-color: black;
+}
