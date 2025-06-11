@@ -18,14 +18,14 @@
             <input matInput type="time" placeholder="Ingrese la hora de finalizacion hh:mm:ss" required formControlName="endHours" />
         </mat-form-field>
         <mat-form-field>
-            <mat-label>Elige la fecha</mat-label>
+            <mat-label>Fecha</mat-label>
             <input matInput [matDatepicker]="picker" formControlName="date" />
             <mat-hint>DD/MM/AAAA</mat-hint>
             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
         <mat-form-field>
-            <mat-label>Cursos</mat-label>
+            <mat-label>Curso</mat-label>
             <mat-select required formControlName="courseId" placeholder="Seleccione el curso" >
                 @if (courses().length===0) {
                     <mat-option disabled >No tiene cursos</mat-option>
