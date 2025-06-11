@@ -1,0 +1,24 @@
+.account{
+    background-color: #fff;
+    padding: 16px;
+    border-radius: 8px;
+}
+.account .account__title{
+    color: var(--color-grey-500);
+}
+.account .account__subtitle{
+    color: var(--color-grey-400);
+    font-size: 20px;
+}
+.account .form.first{
+    margin-bottom: 20px;
+}
+.account .form{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 16px;
+
+}
+.account .form .form__button{
+    width: max-content;
+}
