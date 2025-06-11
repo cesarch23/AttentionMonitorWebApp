@@ -1,1 +1,66 @@
-<p>account works!</p>
+<div class="account">
+    <h5 class="account__title">Cuenta</h5>
+    <h6 class="account__subtitle">Datos personales</h6>
+    <form class="form first" [formGroup]="userForm" (ngSubmit)="updateProfile()" >
+        <mat-form-field class="form__group">
+            <mat-label>Nombre</mat-label>
+            <input type="text" matInput required  placeholder="Nombre" formControlName="name">
+        </mat-form-field>
+        <mat-form-field class="form__group">
+            <mat-label>Apellido materno</mat-label>
+            <input type="text" matInput required  placeholder="Apellido materno" formControlName="maternalLastname" >
+        </mat-form-field>
+        <mat-form-field class="form__group">
+            <mat-label>Apellido paterno</mat-label>
+            <input type="text" matInput required  placeholder="Apellido paterno" formControlName="paternalLastname" >
+        </mat-form-field>
+        <mat-form-field class="form__group">
+            <mat-label>Correo electronico</mat-label>
+            <input type="text" matInput required  placeholder="Correo electronico" formControlName="email" >
+        </mat-form-field>
+        <mat-form-field class="form__group">
+            <mat-label>Genero</mat-label>
+            <mat-select required formControlName="gender" placeholder="Selecciona el genero" >
+                <mat-option value="masculino">Masculino</mat-option>
+                <mat-option value="femenino">Femenino</mat-option>
+            </mat-select>
+        </mat-form-field>
+        @if (userForm.touched && userForm.invalid) {
+            <mat-error class="error" >
+                Completa correctamente todos los campos
+            </mat-error>
+        }
+        <button class="form__button" mat-flat-button type="submit" 
+        [disabled]=" userForm.touched && !userForm.valid "
+         >
+         @if(userFormStatus!=='loading'){
+                <span>Actualizar informacion</span>
+            }
+         @if(userFormStatus==='loading'){
+                <span class="loader"></span>
+            }
+         </button>
+    </form>
+    <h6 class="account__subtitle">Cambiar contraseña</h6>
+    <form class="form" [formGroup]="passwordForm" (ngSubmit)="updatePassword()">
+        <mat-form-field class="form__group">
+            <mat-label>Contraseña actual</mat-label>
+            <input type="text" matInput required  placeholder="Contraseña actual" formControlName="current">
+        </mat-form-field>
+        <mat-form-field class="form__group">
+            <mat-label>Nueva contraseña</mat-label>
+            <input type="text" matInput required  placeholder="Contraseña nueva" formControlName="novel" >
+        </mat-form-field>
+        <button  class="form__button" mat-flat-button type="submit" 
+        [disabled]=" passwordForm.touched && !passwordForm.valid "
+        >
+            @if(passwordFormStatus!=='loading'){
+                <span>Cambiar contraseña</span>
+            }
+            @if(passwordFormStatus==='loading'){
+                <span class="loader"></span>
+            }
+            
+        </button>
+    </form>
+</div>
