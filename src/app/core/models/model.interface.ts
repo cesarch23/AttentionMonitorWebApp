@@ -21,9 +21,20 @@ export interface UserProfile{
     name:string;
     maternalLastname:string;
     paternalLastname:string;
-    gender:Gender;
+    gender:string;
     rol:Role;
 
+}
+export interface UpdatePassword{
+    current:string;
+    novel:string;
+}
+export interface UserUpdate{
+    email:string;
+    name:string; 
+    maternalLastname:string; 
+    paternalLastname:string; 
+    gender:Gender
 }
 export interface TeacherProfile extends UserProfile {
     teacherId:string;
