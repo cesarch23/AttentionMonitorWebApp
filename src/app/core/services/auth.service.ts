@@ -1,9 +1,9 @@
 import { HttpClient, HttpContext, HttpErrorResponse, HttpResponse, HttpStatusCode } from '@angular/common/http';
 import { Injectable, signal, ɵsetCurrentInjector } from '@angular/core';
 import { enviroment } from '../../../environments/environment';
-import { catchError, Observable, retry, switchMap, tap, throwError } from 'rxjs';
+import { catchError, Observable, of, retry, switchMap, tap, throwError } from 'rxjs';
 import { TokenService } from './token.service';
-import { Course, StudentProfile, TeacherProfile, UserRegister } from '../models/model.interface';
+import { Course, Gender, StudentProfile, TeacherProfile, UpdatePassword, UserRegister, UserUpdate } from '../models/model.interface';
 import { Router } from '@angular/router';
 import { EXPECT_TOKEN_IN_RESPONSE, setCachingEnabled } from '../interceptors/token.interceptor';
 
@@ -95,6 +95,13 @@ export class AuthService {
         })
       );
   }
+  refreshTeacherProfile(){
+    const teacherId = this.teacherProfile$()?.teacherId;
+    if(!teacherId){
+      return this.getTeacherProfile();
+    }
+    return of(this.teacherProfile$());
+  }
   getStudentProfile(){
     return this.http.get<StudentProfile>(`${this.BASE_URL}/estudiantes/profile`,{context: setCachingEnabled()})
       .pipe(
@@ -103,6 +110,60 @@ export class AuthService {
           this.studentSignal.update(()=>profile)
         }),
         catchError((error: HttpErrorResponse) => {
+          return throwError(() => new Error('Ups algo salió mal, inténtelo más tarde'));
+        })
+      );
+  }
+  updateTeacherProfile(userUpdate:UserUpdate,teacherId:string ='0'){
+    return this.http.put<TeacherProfile>(`${this.BASE_URL}/profesores/${teacherId}`,userUpdate,{context: setCachingEnabled()})
+      .pipe(
+        tap(profile=> {
+           this.teacherSignal.update(()=>profile)
+          }),
+        catchError((error: HttpErrorResponse) => {
+          if(error.status === HttpStatusCode.Unauthorized){
+            return throwError(()=> new Error('Credenciales inválidas. vuelve a iniciar sesión'))
+          }
+          if(error.status === HttpStatusCode.NotFound){
+            return throwError(()=> new Error(error.message))
+          }
+          if(error.status === HttpStatusCode.Conflict){
+            return throwError(()=> new Error(error.message))
+          }
+          return throwError(() => new Error('Ups algo salió mal, inténtelo más tarde'));
+        })
+      );
+  }
+  updateStudentProfile(userUpdate:UserUpdate,studentId:string ='0'){
+    return this.http.put<StudentProfile>(`${this.BASE_URL}/estudiantes/${studentId}`,userUpdate,{context: setCachingEnabled()})
+      .pipe(
+        tap(profile=> {
+           this.studentSignal.update(()=>profile)
+          }),
+        catchError((error: HttpErrorResponse) => {
+          if(error.status === HttpStatusCode.Unauthorized){
+            return throwError(()=> new Error('Credenciales inválidas. vuelve a iniciar sesión'))
+          }
+          if(error.status === HttpStatusCode.NotFound){
+            return throwError(()=> new Error(error.message))
+          }
+          if(error.status === HttpStatusCode.Conflict){
+            return throwError(()=> new Error(error.message))
+          }
+          return throwError(() => new Error('Ups algo salió mal, inténtelo más tarde'));
+        })
+      );
+  }
+  updateTeacherPassword(update: UpdatePassword,teacherId:string ='0'){
+    return this.http.put<Boolean>(`${this.BASE_URL}/profesores/password/${teacherId}`,update,{context: setCachingEnabled()})
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          if(error.status === HttpStatusCode.Unauthorized){
+            return throwError(()=> new Error('Credenciales inválidas. vuelve a iniciar sesión'))
+          }
+          if(error.status === HttpStatusCode.NotFound){
+            return throwError(()=> new Error(error.message))
+          }
           return throwError(() => new Error('Ups algo salió mal, inténtelo más tarde'));
         })
       );
