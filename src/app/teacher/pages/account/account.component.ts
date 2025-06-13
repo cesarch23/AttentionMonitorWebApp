@@ -95,7 +95,7 @@ export class AccountComponent implements OnInit{
           this.passwordForm.reset()
           this.authServ.logout()
         }
-        else this.notificationServ.show("No se pudo actualizar la contraseña",'error')
+        else this.notificationServ.show("Error de autenticación. Verifica tu contraseña actual",'error')
       },
       error:(messageError)=>{
         this.notificationServ.show(messageError,'error')
