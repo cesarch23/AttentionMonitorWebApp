@@ -26,7 +26,7 @@ jobs:
 
       - name: Build the Angular app
         run: |
-          npm run build -- --configuration production --base-href /AttentionMonitorWebApp/
+          npm run build -- --configuration production
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
