@@ -30,7 +30,7 @@ jobs:
       # 4. Build con base-href configurado para GitHub Pages
       - name: Build the Angular app
         run: |
-          npm run build -- --configuration production --base-href /AttentionMonitorWebApp/
+          npm run build -- --configuration production 
 
       # 5. Deploy a GitHub Pages
       - name: Deploy to GitHub Pages
