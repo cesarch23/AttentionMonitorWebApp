@@ -5,6 +5,7 @@ export type Gender = 'masculino' | 'femenino'
 export type Role = 'ESTUDIANTE' | 'PROFESOR' 
 
 export interface UserRegister{
+    name:string;
     email:string;
     password:string;
     maternalLastname:string;
