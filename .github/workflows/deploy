@@ -13,29 +13,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Clonar el repositorio
       - name: Checkout the repository
         uses: actions/checkout@v3
 
-      # 2. Configurar Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      # 3. Instalar dependencias
       - name: Install dependencies
         run: npm ci
 
-      # 4. Build con base-href configurado para GitHub Pages
       - name: Build the Angular app
         run: |
-          npm run build -- --configuration production --base-href /attention-monitor-frontend/
+          npm run build -- --configuration production --base-href /AttentionMonitorWebApp/
 
-      # 5. Deploy a GitHub Pages
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: dist/attention-monitor-frontend
+          folder: dist/attention-monitor-frontend/browser
           token: ${{ secrets.GITHUB_TOKEN }}
