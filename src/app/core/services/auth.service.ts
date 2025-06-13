@@ -49,8 +49,8 @@ export class AuthService {
 
     )
   }
-  register(userRegister:UserRegister){
-    return this.http.post(`${this.BASE_URL}/auth/register`,userRegister)
+  registerTeacher(userRegister:UserRegister){
+    return this.http.post(`${this.BASE_URL}/auth/profesor`,userRegister)
     .pipe(
       catchError((error:HttpErrorResponse)=>{
         if(error.status === HttpStatusCode.Conflict){
@@ -60,8 +60,25 @@ export class AuthService {
       })
     )
   }
-  registerAndLogin(userRegister:UserRegister){
-    return this.register(userRegister)
+  registerAndLoginTeacher(userRegister:UserRegister){
+    return this.registerTeacher(userRegister)
+    .pipe(
+      switchMap(()=>this.login(userRegister.email,userRegister.password))
+    )
+  }
+  registerStudent(userRegister:UserRegister){
+    return this.http.post(`${this.BASE_URL}/auth/estudiante`,userRegister)
+    .pipe(
+      catchError((error:HttpErrorResponse)=>{
+        if(error.status === HttpStatusCode.Conflict){
+          return throwError(()=> new Error('Ya se registro el email'))
+        }
+        return throwError(()=> new Error('Ups algo salio mal, intentelo más tarde'))
+      })
+    )
+  }
+  registerAndLoginStudent(userRegister:UserRegister){
+    return this.registerStudent(userRegister)
     .pipe(
       switchMap(()=>this.login(userRegister.email,userRegister.password))
     )
