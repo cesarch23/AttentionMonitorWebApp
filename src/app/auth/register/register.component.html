@@ -1,1 +1,193 @@
-<p>register works!</p>
+<div class="backgroud">
+    <div class="container">
+      <div class="header">
+        <h2>Registrarse</h2>
+        <p>Por favor ingrese sus datos</p>
+      </div>
+      <div class="taps">
+        <mat-tab-group class="tap__group" dynamicHeight>
+          <mat-tab [disabled]="tabIsDisable" label="Estudiante"  class="tap__item" >
+            <form action="#" [formGroup]="registerFormStudent" class="form" (ngSubmit)="onSubmitStudent()">
+              <mat-form-field class="form__group">
+                <mat-label>Nombre</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  placeholder="Ingrese su nombre"
+                  required
+                  formControlName="name"
+                  name="name"
+                  id="name"
+                />
+              </mat-form-field>
+              <div class="form__two">
+                  <mat-form-field class="form__group">
+                    <mat-label>Apellido materno</mat-label>
+                    <input
+                      matInput
+                      type="text"
+                      placeholder="Ingrese su apellido materno"
+                      required
+                      formControlName="maternalLastname"
+                      name="manternal"
+                      id="manternal"
+                    />
+                  </mat-form-field>
+                  <mat-form-field class="form__group">
+                    <mat-label>Apellido paterno</mat-label>
+                    <input
+                      matInput
+                      type="text"
+                      placeholder="Ingrese su apellido paterno"
+                      required
+                      formControlName="paternalLastname"
+                      name="paternal"
+                      id="paternal"
+                    />
+                  </mat-form-field>
+              </div>
+              <mat-form-field class="form__group">
+            <mat-label>Genero</mat-label>
+            <mat-select required formControlName="gender" placeholder="Selecciona el genero" >
+                <mat-option value="masculino">Masculino</mat-option>
+                <mat-option value="femenino">Femenino</mat-option>
+            </mat-select>
+            </mat-form-field>
+              <mat-form-field class="form__group">
+                <mat-label>Correo electrónico</mat-label>
+                <input
+                  matInput
+                  type="email"
+                  placeholder="Ingrese su correo electrónico"
+                  required
+                  formControlName="email"
+                  name="email"
+                  id="email"
+                />
+              </mat-form-field>
+              <mat-form-field class="form__group">
+                <mat-label>Contraseña</mat-label>
+                <input
+                  matInput
+                  type="password"
+                  placeholder="Ingrese su contraseña"
+                  required
+                  formControlName="password"
+                />
+              </mat-form-field>
+              @if (registerFormStudent.touched && registerFormStudent.invalid) {
+                <mat-error class="error" >
+                  Completa correctamente todos los campos
+                </mat-error>
+              }
+              <button type="submit"
+                mat-flat-button
+                class="form__button"
+                [disabled]=" registerFormStudent.touched && !registerFormStudent.valid "
+               >
+               @if(statusFormStudent!=='loading'){
+                    <span>Registrarse</span>
+               }
+               @if(statusFormStudent==='loading'){
+                    <span class="loader"></span>
+               }
+              </button> 
+            </form>
+          </mat-tab>
+          <mat-tab label="Profesor" class="tap__item" [disabled]="tabIsDisable">
+            <form action="#" [formGroup]="registerFormTeacher" class="form" (ngSubmit)="onSubmitTeacher()">
+              <mat-form-field class="form__group">
+                <mat-label>Nombre</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  placeholder="Ingrese su nombre"
+                  required
+                  formControlName="name"
+                  name="name"
+                  id="name"
+                />
+              </mat-form-field>
+              <div class="form__two">
+                  <mat-form-field class="form__group">
+                    <mat-label>Apellido materno</mat-label>
+                    <input
+                      matInput
+                      type="text"
+                      placeholder="Ingrese su apellido materno"
+                      required
+                      formControlName="maternalLastname"
+                      name="manternal"
+                      id="manternal"
+                    />
+                  </mat-form-field>
+                  <mat-form-field class="form__group">
+                    <mat-label>Apellido paterno</mat-label>
+                    <input
+                      matInput
+                      type="text"
+                      placeholder="Ingrese su apellido paterno"
+                      required
+                      formControlName="paternalLastname"
+                      name="paternal"
+                      id="paternal"
+                    />
+                  </mat-form-field>
+              </div>
+              <mat-form-field class="form__group">
+            <mat-label>Genero</mat-label>
+            <mat-select required formControlName="gender" placeholder="Selecciona el genero" >
+                <mat-option value="masculino">Masculino</mat-option>
+                <mat-option value="femenino">Femenino</mat-option>
+            </mat-select>
+            </mat-form-field>
+              <mat-form-field class="form__group">
+                <mat-label>Correo electrónico</mat-label>
+                <input
+                  matInput
+                  type="email"
+                  placeholder="Ingrese su correo electrónico"
+                  required
+                  formControlName="email"
+                  name="email"
+                  id="email"
+                />
+              </mat-form-field>
+              <mat-form-field class="form__group">
+                <mat-label>Contraseña</mat-label>
+                <input
+                  matInput
+                  type="password"
+                  placeholder="Ingrese su contraseña"
+                  required
+                  formControlName="password"
+                />
+              </mat-form-field>
+              @if (registerFormTeacher.touched && registerFormTeacher.invalid) {
+                <mat-error class="error" >
+                  Completa correctamente todos los campos
+                </mat-error>
+              }
+              <button type="submit"
+                mat-flat-button
+                class="form__button"
+                [disabled]=" registerFormTeacher.touched && !registerFormTeacher.valid "
+               >
+               @if(statusFormTeacher!=='loading'){
+                    <span>Registrarse</span>
+               }
+               @if(statusFormTeacher==='loading'){
+                    <span class="loader"></span>
+               }
+              </button> 
+            </form>
+            
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+      <div class="form__or">
+        <hr> <span> O </span> <hr>
+      </div>
+       <p class="register">¿Ya tienes una cuenta? <span routerLink="/auth/login">Inicia sesión</span></p>
+    </div>
+</div>
