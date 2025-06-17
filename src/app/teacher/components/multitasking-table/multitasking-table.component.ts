@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogContent } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -21,7 +21,7 @@ import { AttentionService } from '../../../core/services/attention.service';
   templateUrl: './multitasking-table.component.html',
   styleUrl: './multitasking-table.component.css'
 })
-export class MultitaskingTableComponent implements OnInit{
+export class MultitaskingTableComponent implements OnInit,AfterViewInit{
      
     itemsColumns = ['paternalLastname','Actividad','minutesUsePhone','description','minutesElapsedInSession'] 
     dataSource = new MatTableDataSource<Attention>()
