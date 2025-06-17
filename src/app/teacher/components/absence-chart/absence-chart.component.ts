@@ -70,8 +70,6 @@ export class AbsenceChartComponent {
     if(!this.session()?.sessionId) return;
     this.dialog.open(MultitaskingTableComponent,{ 
       data: { sessionId: this.session()!.sessionId },
-      // width:'90%'
     })
-    console.log("session id: ",this.session()?.sessionId)
   }
 }
