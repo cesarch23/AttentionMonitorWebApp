@@ -1,0 +1,56 @@
+import { Injectable } from '@angular/core';
+import { enviroment } from '../../../environments/environment';
+import { HttpClient, HttpStatusCode } from '@angular/common/http';
+import { TokenService } from './token.service';
+import { catchError, Observable, throwError } from 'rxjs';
+import { AbsentChart, LineChart, PhoneLineChart } from '../models/model.interface';
+import { setCachingEnabled } from '../interceptors/token.interceptor';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AttentionService {
+  
+
+  private url = `${enviroment.BASE_URL}/atenciones`
+  
+  constructor(
+      private http: HttpClient,
+      //private tokenService:TokenService,
+      //private router:Router
+  ) { }
+  getUsePhoneLineChart(sessionId:string):Observable<PhoneLineChart>{
+    return this.http.get<PhoneLineChart>(`${this.url}/phone-use/${sessionId}`,{ context:setCachingEnabled() }).pipe(
+          catchError((error)=>{
+            if(error.status === HttpStatusCode.Unauthorized){
+              return throwError(()=> new Error('Credenciales inválidas. vuelve a iniciar sesión'))
+            }
+            return throwError(()=> new Error('Ups algo salio mal, intentelo más tarde'))
+          })
+        );
+  }
+  getSomnolenceLineChart(sessionId:string):Observable<LineChart>{
+    return this.http.get<LineChart>(`${this.url}/somnolence/${sessionId}`,{ context:setCachingEnabled() }).pipe(
+          catchError((error)=>{
+            if(error.status === HttpStatusCode.Unauthorized){
+              return throwError(()=> new Error('Credenciales inválidas. vuelve a iniciar sesión'))
+            }
+            return throwError(()=> new Error('Ups algo salio mal, intentelo más tarde'))
+          })
+        );
+  }
+  getAbsentChart(sessionId:string):Observable<AbsentChart>{
+    return this.http.get<AbsentChart>(`${this.url}/ausencia/${sessionId}`,{ context:setCachingEnabled() }).pipe(
+          catchError((error)=>{
+            if(error.status === HttpStatusCode.Unauthorized){
+              return throwError(()=> new Error('Credenciales inválidas. vuelve a iniciar sesión'))
+            }
+            return throwError(()=> new Error('Ups algo salio mal, intentelo más tarde'))
+          })
+        );
+  }
+
+
+
+
+}
