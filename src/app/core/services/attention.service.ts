@@ -3,7 +3,7 @@ import { enviroment } from '../../../environments/environment';
 import { HttpClient, HttpStatusCode } from '@angular/common/http';
 import { TokenService } from './token.service';
 import { catchError, Observable, throwError } from 'rxjs';
-import { AbsentChart, LineChart, PhoneLineChart } from '../models/model.interface';
+import { AbsentChart, Attention, LineChart, PhoneLineChart } from '../models/model.interface';
 import { setCachingEnabled } from '../interceptors/token.interceptor';
 
 @Injectable({
@@ -51,6 +51,46 @@ export class AttentionService {
   }
   getAttentionAvrgChart(sessionId:string):Observable<LineChart>{
     return this.http.get<LineChart>(`${this.url}/promedio/${sessionId}`,{ context:setCachingEnabled() }).pipe(
+          catchError((error)=>{
+            if(error.status === HttpStatusCode.Unauthorized){
+              return throwError(()=> new Error('Credenciales inválidas. vuelve a iniciar sesión'))
+            }
+            return throwError(()=> new Error('Ups algo salio mal, intentelo más tarde'))
+          })
+        );
+  }
+  getAttentionMultitaskingDetails(sessionId:string):Observable<Attention[]>{
+    return this.http.get<Attention[]>(`${this.url}/phone-use-details/${sessionId}`,{ context:setCachingEnabled() }).pipe(
+          catchError((error)=>{
+            if(error.status === HttpStatusCode.Unauthorized){
+              return throwError(()=> new Error('Credenciales inválidas. vuelve a iniciar sesión'))
+            }
+            return throwError(()=> new Error('Ups algo salio mal, intentelo más tarde'))
+          })
+        );
+  }
+  getAttentionSomnolenceDetails(sessionId:string):Observable<Attention[]>{
+    return this.http.get<Attention[]>(`${this.url}/somnolence-details/${sessionId}`,{ context:setCachingEnabled() }).pipe(
+          catchError((error)=>{
+            if(error.status === HttpStatusCode.Unauthorized){
+              return throwError(()=> new Error('Credenciales inválidas. vuelve a iniciar sesión'))
+            }
+            return throwError(()=> new Error('Ups algo salio mal, intentelo más tarde'))
+          })
+        );
+  }
+  getAttentionAbsentDetails(sessionId:string):Observable<Attention[]>{
+    return this.http.get<Attention[]>(`${this.url}/ausentes-details/${sessionId}`,{ context:setCachingEnabled() }).pipe(
+          catchError((error)=>{
+            if(error.status === HttpStatusCode.Unauthorized){
+              return throwError(()=> new Error('Credenciales inválidas. vuelve a iniciar sesión'))
+            }
+            return throwError(()=> new Error('Ups algo salio mal, intentelo más tarde'))
+          })
+        );
+  }
+  getAttentionDetails(sessionId:string):Observable<Attention[]>{
+    return this.http.get<Attention[]>(`${this.url}/${sessionId}`,{ context:setCachingEnabled() }).pipe(
           catchError((error)=>{
             if(error.status === HttpStatusCode.Unauthorized){
               return throwError(()=> new Error('Credenciales inválidas. vuelve a iniciar sesión'))
