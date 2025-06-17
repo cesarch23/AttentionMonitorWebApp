@@ -2,47 +2,85 @@
     <div class="page__header">
         <mat-form-field>
             <mat-label>Codigo de la sesión</mat-label>
-            <input matInput required type="text" placeholder="Codigo de la sesion">
+            <input matInput required type="text" placeholder="Codigo de la sesion" class="input" [formControl]="sessionId" >
+            
         </mat-form-field>
-        <div class="page__group">
-            <span>Fecha de inicio:</span>
-            <p> 12/13/2025 12:00:00</p>
-        </div>
-        <div class="page__group">
-            <span>Curso:</span>
-            <p> calculo</p>
-        </div>
-        <div class="page__group">
-            <span>Tiempo transcurrido:</span>
-            <p> 20 minutos desde el inicio de la sesion</p>
-        </div>
-        
-        <button mat-flat-button>
-                Actualizar
-                <mat-icon>update</mat-icon>
-        </button>
+        @if (conected) {
+            <div class="page__group">
+            <span>Fecha y hora de inicio:</span>
+            <p> {{ session()?.date }}  {{ session()?.startHours }} </p>
+            </div>
+            <div class="page__group">
+                <span>Curso:</span>
+                <p> {{ session()?.course?.name }}  </p>
+            </div>
+            <!-- <div class="page__group">
+                <span>Tiempo transcurrido:</span>
+                <p> 20 minutos desde el inicio de la sesion</p>
+            </div> -->
+            
+            <button mat-flat-button (click)="updateCharts()">
+                    Actualizar
+                    <mat-icon>update</mat-icon>
+            </button>
+        }
+        @if(!conected){
+            <button mat-flat-button [disabled]="sessionId.invalid "  (click)="conectarSesion()" >Conectar</button>
+        }
         
     </div>
     <div class="page__content" >
-         <div class="page__card">
-            
-             <teacher-multitasking-chart></teacher-multitasking-chart>
-           
-         </div>
-         <div class="page__card">
-            
-             <teacher-somnolence-chart></teacher-somnolence-chart>
-            
-         </div>
-         <div class="page__card">
-            
-             <teacher-absence-chart [ausentes]="12" [noAusentes]="9"></teacher-absence-chart>
-             
-         </div>
-         <div class="page__card">
-             
-             <teacher-attention-chart [nivelesAtencion]="nivelesAtencion" ></teacher-attention-chart>
-             
-         </div>
+         @if (conected) {
+            <div class="page__card">
+                @if (phoneRequest==='loading') {
+                    <span class="loader"></span>
+                }
+                @if (phoneRequest==='failed') {
+                    <mat-error>{{ messageErrorPhoneUse }}</mat-error>
+                }
+                @if (phoneRequest==='success' ) {
+                    <teacher-multitasking-chart [phoneUseData]="phoneUseData"  ></teacher-multitasking-chart>
+                }
+
+            </div>
+            <div class="page__card">
+                @if (somnolenceRequest==='loading') {
+                    <span class="loader"></span>
+                }
+                @if (somnolenceRequest==='failed') {
+                    <mat-error>{{ messageErrorSomn }}</mat-error>
+                }
+                @if (somnolenceRequest==='success' ) {
+                    <teacher-somnolence-chart [somnolenceData]="somnolenceData" ></teacher-somnolence-chart>
+                }
+                
+            </div>
+            <div class="page__card">
+                @if (absentRequest==='loading') {
+                    <span class="loader"></span>
+                }
+                @if (absentRequest==='failed') {
+                    <mat-error>{{ messageErrorAbsent }}</mat-error>
+                }
+                @if (absentRequest==='success' ) {
+                    <teacher-absence-chart [absentData]="absenceInfo"  ></teacher-absence-chart>
+                }
+            </div>
+            <div class="page__card">
+                  <div class="page__card">
+                @if (attenionAvrgRequest==='loading') {
+                    <span class="loader"></span>
+                }
+                @if (attenionAvrgRequest==='failed') {
+                    <mat-error>{{ messageErrorAvrg }}</mat-error>
+                }
+                @if (attenionAvrgRequest==='success' ) {
+                     <teacher-attention-chart [attentionData]="attenionAvrgInfo" ></teacher-attention-chart>
+                }
+            </div>
+            </div>
+         }@else {
+             <p color="warn">Ingrese el codigo de la sesion</p>
+         }
     </div>
 </div>

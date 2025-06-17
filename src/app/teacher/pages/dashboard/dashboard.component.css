@@ -1,5 +1,4 @@
 .page{
-    
     font-weight: 500;
     width: 100%;
     min-width: min-content;
@@ -9,13 +8,16 @@
     color: var(--color-grey-500);
     
     display: flex;
-    justify-content: space-between;
+    gap: 32px;
     align-items: center;
 
     padding:8px 16px;
     border-radius: 8px;
   
 }
+.page .page__header .inpu{
+    width: min-content;
+} 
 .page .page__header .page__group span{
     color: var(--color-grey-500);
     font-weight: 600;
