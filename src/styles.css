@@ -37,7 +37,7 @@ p{
     width: 30px;
     height: 30px;
     border: 5px solid #FFF;
-    border-bottom-color: #72FFDF;
+    border-bottom-color: hsl(166, 100%, 12%);
     border-radius: 50%;
     display: inline-block;
     box-sizing: border-box;
