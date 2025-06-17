@@ -101,4 +101,18 @@ export class SessionsService {
       })
     );
   }
+  getSessionById(sessionId:string):Observable<Session>{
+     return this.http.get<Session>(`${this.url}/${sessionId}`,{ context:setCachingEnabled() }).pipe(
+      catchError((error)=>{
+        if(error.status === HttpStatusCode.Unauthorized){
+          return throwError(()=> new Error('Credenciales inválidas. vuelve a iniciar sesión'))
+        }
+        if(error.status === HttpStatusCode.NotFound){
+            return throwError(()=> new Error('La sesion aun no fue creada'))
+        }
+        return throwError(()=> new Error('Ups algo salio mal, intentelo más tarde'))
+      })
+    );
+  }
+
 }
