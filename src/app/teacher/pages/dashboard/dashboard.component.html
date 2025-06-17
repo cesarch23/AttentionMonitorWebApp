@@ -39,7 +39,7 @@
                     <mat-error>{{ messageErrorPhoneUse }}</mat-error>
                 }
                 @if (phoneRequest==='success' ) {
-                    <teacher-multitasking-chart [phoneUseData]="phoneUseData"  ></teacher-multitasking-chart>
+                    <teacher-multitasking-chart [phoneUseData]="phoneUseData" [session]="session"  ></teacher-multitasking-chart>
                 }
 
             </div>
@@ -51,7 +51,7 @@
                     <mat-error>{{ messageErrorSomn }}</mat-error>
                 }
                 @if (somnolenceRequest==='success' ) {
-                    <teacher-somnolence-chart [somnolenceData]="somnolenceData" ></teacher-somnolence-chart>
+                    <teacher-somnolence-chart [somnolenceData]="somnolenceData" [session]="session"  ></teacher-somnolence-chart>
                 }
                 
             </div>
@@ -63,7 +63,7 @@
                     <mat-error>{{ messageErrorAbsent }}</mat-error>
                 }
                 @if (absentRequest==='success' ) {
-                    <teacher-absence-chart [absentData]="absenceInfo"  ></teacher-absence-chart>
+                    <teacher-absence-chart [absentData]="absenceInfo" [session]="session"  ></teacher-absence-chart>
                 }
             </div>
             <div class="page__card">
@@ -75,7 +75,7 @@
                     <mat-error>{{ messageErrorAvrg }}</mat-error>
                 }
                 @if (attenionAvrgRequest==='success' ) {
-                     <teacher-attention-chart [attentionData]="attenionAvrgInfo" ></teacher-attention-chart>
+                     <teacher-attention-chart [attentionData]="attenionAvrgInfo" [session]="session" ></teacher-attention-chart>
                 }
             </div>
             </div>
