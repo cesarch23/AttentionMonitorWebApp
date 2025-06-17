@@ -30,6 +30,7 @@ export class AbsentTableComponent implements OnInit,AfterViewInit {
     
     
   ngOnInit(): void {
+    this.attentionRequestStatus='loading'
     this.attentionServ.getAttentionAbsentDetails(this.data.sessionId).subscribe({
       next:(attentions)=>{
         this.attentionRequestStatus='success'
