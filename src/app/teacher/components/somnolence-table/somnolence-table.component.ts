@@ -29,6 +29,7 @@ export class SomnolenceTableComponent implements OnInit,AfterViewInit {
   
   
       ngOnInit(): void {
+        this.attentionRequestStatus='loading'
         this.attentionServ.getAttentionSomnolenceDetails(this.data.sessionId).subscribe({
           next:(attentions)=>{
             this.attentionRequestStatus='success'
