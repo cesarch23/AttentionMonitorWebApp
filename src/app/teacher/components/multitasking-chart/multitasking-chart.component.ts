@@ -37,7 +37,7 @@ export class MultitaskingChartComponent {
       datasets: [
         {
           data: data.data,
-          label: 'Número de Estudiantes',
+          label: 'Porcentaje de estudiantes',
           fill: false,
           tension: 0,
           borderColor: '#3f51b5',

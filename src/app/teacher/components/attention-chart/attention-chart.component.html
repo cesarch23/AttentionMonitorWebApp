@@ -1,12 +1,12 @@
 <mat-card class="card" appearance="raised">
   <mat-card-header>
-    <mat-card-title>Nivel de Atención</mat-card-title>
+    <mat-card-title>Nivel de atención promedio de la clase</mat-card-title>
   </mat-card-header>
 
   <mat-card-content>
     <canvas
       baseChart
-      [data]="lineChartData"
+      [data]="lineChartData()"
       [options]="lineChartOptions"
       type="line"
     ></canvas>

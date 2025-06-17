@@ -49,6 +49,16 @@ export class AttentionService {
           })
         );
   }
+  getAttentionAvrgChart(sessionId:string):Observable<LineChart>{
+    return this.http.get<LineChart>(`${this.url}/promedio/${sessionId}`,{ context:setCachingEnabled() }).pipe(
+          catchError((error)=>{
+            if(error.status === HttpStatusCode.Unauthorized){
+              return throwError(()=> new Error('Credenciales inválidas. vuelve a iniciar sesión'))
+            }
+            return throwError(()=> new Error('Ups algo salio mal, intentelo más tarde'))
+          })
+        );
+  }
 
 
 

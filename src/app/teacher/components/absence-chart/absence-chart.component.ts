@@ -20,11 +20,9 @@ Chart.register(ArcElement, Tooltip, Legend);
   styleUrl: './absence-chart.component.css'
 })
 export class AbsenceChartComponent {
-  /** 2️⃣ Recibe un Signal con los datos (o null) */
+   
   @Input({ required: true }) absentData!: Signal<AbsentChart | null>;
 
-
-  /** Opciones del gráfico */
   public pieChartOptions: ChartConfiguration['options'] = {
     responsive: true,
     plugins: {
