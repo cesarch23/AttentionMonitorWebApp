@@ -1,11 +1,11 @@
 <mat-card class="card" appearance="raised" >
   <mat-card-header>
-    <mat-card-title>Nivel de somnolencia</mat-card-title>
+    <mat-card-title>Estudiantes con somnolencia</mat-card-title>
   </mat-card-header>
   <mat-card-content>
     <canvas
       baseChart
-      [data]="lineChartData"
+      [data]="lineChartData()"
       [options]="lineChartOptions"
       type="line">
     </canvas>

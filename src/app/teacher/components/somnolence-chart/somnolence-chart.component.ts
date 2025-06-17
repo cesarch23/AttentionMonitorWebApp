@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, effect, input, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
+import { LineChart } from '../../../core/models/model.interface';
 
 @Component({
   selector: 'teacher-somnolence-chart',
@@ -18,22 +19,36 @@ import { BaseChartDirective } from 'ng2-charts';
   styleUrl: './somnolence-chart.component.css'
 })
 export class SomnolenceChartComponent {
-   public lineChartData: ChartConfiguration<'line'>['data'] = {
-    labels: ['0 min', '10 min', '20 min', '30 min', '40 min', '50 min', '60 min'],
-    datasets: [
-      {
-        data: [20, 35, 50, 45, 65, 80, 75],
-        label: 'Nivel de somnolencia',
-        fill: false,
-        tension: 0,
-        borderColor: '#3f51b5',
-        pointBackgroundColor: '#3f51b5',
-        pointBorderWidth: 2,
-        pointRadius: 5,
-      },
-    ],
-  };
-
+    somnolenceData = input<LineChart | null>(null);
+  
+    lineChartData = signal<ChartConfiguration<'line'>['data']>({
+      labels: [],
+      datasets: [],
+      
+    });
+  
+    constructor() {
+      effect(() => {
+      const data = this.somnolenceData();
+      if (!data) return;
+      this.lineChartData.update(() => ({
+        labels: data.labels,
+        datasets: [
+          {
+            data: data.data,
+            label: 'Número de Estudiantes',
+            fill: false,
+            tension: 0,
+            borderColor: '#3f51b5',
+            pointBackgroundColor: '#3f51b5',
+            pointBorderWidth: 2,
+            pointRadius: 5,
+          },
+        ],
+      }));
+    }, { allowSignalWrites: true });
+    }
+  
   public lineChartOptions: ChartOptions<'line'> = {
     responsive: true,
     scales: {
@@ -45,13 +60,12 @@ export class SomnolenceChartComponent {
       },
       y: {
         beginAtZero: true,
-        max: 100,
         title: {
           display: true,
-          text: 'Porcentaje de Estudiantes (%)',
+          text: 'Número de estudiantes',
         },
         ticks: {
-          callback: (value) => `${value}%`,
+          callback: (value) => Number.isInteger(value) ? value : '',
         },
       },
     },
@@ -61,7 +75,7 @@ export class SomnolenceChartComponent {
       },
       tooltip: {
         callbacks: {
-          label: context => `${context.parsed.y}% de estudiantes`,
+          label: context => `${context.parsed.y} de estudiantes`,
         },
       },
     },
