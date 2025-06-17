@@ -1,10 +1,12 @@
-import { AfterViewInit, Component, computed, effect, input, Input, OnChanges, Signal, signal, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, computed, effect, inject, input, Input, OnChanges, Signal, signal, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
 import { ArcElement, Chart, ChartConfiguration, ChartData, ChartType, Legend, Tooltip } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
-import { AbsentChart } from '../../../core/models/model.interface';
+import { AbsentChart, Session } from '../../../core/models/model.interface';
+import { MatDialog } from '@angular/material/dialog';
+import { MultitaskingTableComponent } from '../multitasking-table/multitasking-table.component';
 Chart.register(ArcElement, Tooltip, Legend);
 @Component({
   selector: 'teacher-absence-chart',
@@ -22,7 +24,9 @@ Chart.register(ArcElement, Tooltip, Legend);
 export class AbsenceChartComponent {
    
   @Input({ required: true }) absentData!: Signal<AbsentChart | null>;
-
+  @Input({ required: true }) session= signal<Session | null> (null);
+  private dialog = inject(MatDialog);
+  
   public pieChartOptions: ChartConfiguration['options'] = {
     responsive: true,
     plugins: {
@@ -62,4 +66,12 @@ export class AbsenceChartComponent {
     };
   });
    
+  showAbsentStudents(){
+    if(!this.session()?.sessionId) return;
+    this.dialog.open(MultitaskingTableComponent,{ 
+      data: { sessionId: this.session()!.sessionId },
+      // width:'90%'
+    })
+    console.log("session id: ",this.session()?.sessionId)
+  }
 }
