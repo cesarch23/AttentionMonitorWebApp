@@ -7,6 +7,7 @@ import { BaseChartDirective } from 'ng2-charts';
 import { AbsentChart, Session } from '../../../core/models/model.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { MultitaskingTableComponent } from '../multitasking-table/multitasking-table.component';
+import { AbsentTableComponent } from '../absent-table/absent-table.component';
 Chart.register(ArcElement, Tooltip, Legend);
 @Component({
   selector: 'teacher-absence-chart',
@@ -68,8 +69,10 @@ export class AbsenceChartComponent {
    
   showAbsentStudents(){
     if(!this.session()?.sessionId) return;
-    this.dialog.open(MultitaskingTableComponent,{ 
+    this.dialog.open(AbsentTableComponent,{ 
       data: { sessionId: this.session()!.sessionId },
+      minWidth:'400px',
+      maxWidth: '900px'
     })
   }
 }
