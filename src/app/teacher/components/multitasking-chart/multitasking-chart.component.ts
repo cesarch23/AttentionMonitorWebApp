@@ -1,10 +1,11 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, computed, effect, input, signal } from '@angular/core';
 
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions, ChartType } from 'chart.js';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
+import { PhoneLineChart } from '../../../core/models/model.interface';
 
 @Component({
   selector: 'teacher-multitasking-chart',
@@ -19,24 +20,37 @@ import { MatIcon } from '@angular/material/icon';
   styleUrl: './multitasking-chart.component.css'
 })
 export class MultitaskingChartComponent {
-  
-  public lineChartData: ChartConfiguration<'line'>['data'] = {
-    labels: ['0 min', '10 min', '20 min', '30 min', '40 min', '50 min', '60 min'],
-    datasets: [
-      {
-        data: [12, 18, 24, 20, 28, 35, 30],
-        label: 'Número de Estudiantes',
-        fill: false,
-        tension: 0,
-        borderColor: '#3f51b5',
-        pointBackgroundColor: '#3f51b5',
-        pointBorderWidth: 2,
-        pointRadius: 5,
-      },
-    ],
-  };
 
-  public lineChartOptions: ChartOptions<'line'> = {
+  phoneUseData = input<PhoneLineChart | null>(null);
+
+  lineChartData = signal<ChartConfiguration<'line'>['data']>({
+    labels: [],
+    datasets: [],
+  });
+
+  constructor() {
+    effect(() => {
+    const data = this.phoneUseData();
+    if (!data) return;
+    this.lineChartData.update(() => ({
+      labels: data.labels,
+      datasets: [
+        {
+          data: data.data,
+          label: 'Número de Estudiantes',
+          fill: false,
+          tension: 0,
+          borderColor: '#3f51b5',
+          pointBackgroundColor: '#3f51b5',
+          pointBorderWidth: 2,
+          pointRadius: 5,
+        },
+      ],
+    }));
+  }, { allowSignalWrites: true });
+  }
+
+  lineChartOptions: ChartOptions<'line'> = {
     responsive: true,
     scales: {
       x: {
@@ -51,12 +65,13 @@ export class MultitaskingChartComponent {
           display: true,
           text: 'Número de Estudiantes',
         },
+        ticks: {
+          callback: (value) => Number.isInteger(value) ? value : '',
+        },
       },
     },
     plugins: {
-      legend: {
-        display: false,
-      },
+      legend: { display: false },
       tooltip: {
         callbacks: {
           label: context => `${context.parsed.y} estudiantes`,

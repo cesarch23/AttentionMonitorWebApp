@@ -1,11 +1,11 @@
 <mat-card class="card" appearance="raised">
   <mat-card-header>
-    <mat-card-title>Uso de teléfono de Estudiantes</mat-card-title>
+    <mat-card-title>Uso de teléfono de estudiantes</mat-card-title>
   </mat-card-header>
   <mat-card-content>
     <canvas
       baseChart
-      [data]="lineChartData"
+      [data]="lineChartData()"
       [options]="lineChartOptions"
       type="line">
     </canvas>
