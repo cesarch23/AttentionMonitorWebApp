@@ -1,10 +1,12 @@
-import { Component, effect, input, signal } from '@angular/core';
+import { Component, effect, inject, Input, input, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
-import { LineChart } from '../../../core/models/model.interface';
+import { LineChart, Session } from '../../../core/models/model.interface';
+import { SomnolenceTableComponent } from '../somnolence-table/somnolence-table.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'teacher-somnolence-chart',
@@ -19,15 +21,16 @@ import { LineChart } from '../../../core/models/model.interface';
   styleUrl: './somnolence-chart.component.css'
 })
 export class SomnolenceChartComponent {
-    somnolenceData = input<LineChart | null>(null);
+  @Input({ required: true }) session= signal<Session | null> (null);
+  somnolenceData = input<LineChart | null>(null);
   
-    lineChartData = signal<ChartConfiguration<'line'>['data']>({
+  lineChartData = signal<ChartConfiguration<'line'>['data']>({
       labels: [],
       datasets: [],
       
     });
   
-    constructor() {
+    constructor(private dialog: MatDialog) {
       effect(() => {
       const data = this.somnolenceData();
       if (!data) return;
@@ -81,5 +84,12 @@ export class SomnolenceChartComponent {
     },
   };
 
-  
+  public showSomnolenceStudents(){
+      if(!this.session()?.sessionId) return;
+      this.dialog.open(SomnolenceTableComponent,{ 
+        data: { sessionId: this.session()!.sessionId },
+        minWidth:'400px',
+        maxWidth: '900px'
+      })
+  }
 } 
