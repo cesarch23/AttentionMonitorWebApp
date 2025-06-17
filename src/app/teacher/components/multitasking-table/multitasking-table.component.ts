@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogContent } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogContent } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -13,7 +12,6 @@ import { AttentionService } from '../../../core/services/attention.service';
   imports: [
     MatTableModule,
     MatPaginatorModule,
-    MatButtonModule,
     MatSort,
     MatSortModule,
     MatDialogContent

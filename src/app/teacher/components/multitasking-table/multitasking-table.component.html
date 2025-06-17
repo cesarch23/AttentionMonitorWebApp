@@ -9,14 +9,14 @@
     
      @if (attentionRequestStatus=== 'success') {
         @if (this.dataSource.data.length <= 0) {
-            <p>No Estudiantes para mostrar</p>
+            <p>No hay estudiantes para mostrar</p>
         }
         @else {
             <table mat-table [dataSource]="dataSource" matSort>
     
                 <ng-container matColumnDef="paternalLastname">
                   <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Estudiante </th>
-                  <td mat-cell *matCellDef="let element"> {{element.studentDTO.name.join(" ").element.studentDTO.paternalLastname.join(" ").element.studentDTO.maternalLastname }} </td>
+                  <td mat-cell *matCellDef="let element"> {{element.studentDTO.name +" "+element.studentDTO.paternalLastname+" "+element.studentDTO.maternalLastname }} </td>
                 </ng-container>
                 <ng-container matColumnDef="Actividad">
                   <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Actividad </th>
@@ -28,7 +28,7 @@
                 </ng-container>
                 <ng-container matColumnDef="description">
                   <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Descripcion</th>
-                  <td mat-cell *matCellDef="let element"> {{ element.session.descrioption }} </td>
+                  <td mat-cell *matCellDef="let element"> {{ element.session.description }} </td>
                 </ng-container>
                 <ng-container matColumnDef="minutesElapsedInSession">
                   <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Tiempo transcurrido de la sesión</th>
