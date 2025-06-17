@@ -85,3 +85,29 @@ export interface SessionRegister {
         courseId: string;
     }
 }
+
+export interface Attention {
+    attentionId:             string;
+    minutesElapsedInSession: number;
+    usePhone:                boolean;
+    minutesUsePhone:         number;
+    numberOfYawns:           number;
+    minutesSomnolence:       number;
+    minutesAbsent:           number;
+    attention:               number;
+    studentDTO:              StudentDTO;
+    session:                 Session;
+    connectedFromBegining:   boolean;
+    absent:                  boolean;
+    somnolence:              boolean;
+}
+
+export interface StudentDTO {
+    studentId:        string;
+    email:            string;
+    name:             string;
+    maternalLastname: string;
+    paternalLastname: string;
+    gender:           Gender;
+    role:             string;
+}
