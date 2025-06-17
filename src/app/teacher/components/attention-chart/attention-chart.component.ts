@@ -4,7 +4,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
 import { ChartConfiguration, ChartOptions, ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
-import { LineChart } from '../../../core/models/model.interface';
+import { LineChart, Session } from '../../../core/models/model.interface';
+import { MatDialog } from '@angular/material/dialog';
+import { AttentionTableComponent } from '../attention-table/attention-table.component';
 
 @Component({
   selector: 'teacher-attention-chart',
@@ -19,15 +21,15 @@ import { LineChart } from '../../../core/models/model.interface';
   styleUrl: './attention-chart.component.css'
 })
 export class AttentionChartComponent {
-
+  @Input({ required: true }) session= signal<Session | null> (null);
   attentionData = input<LineChart | null>(null);
   
-    lineChartData = signal<ChartConfiguration<'line'>['data']>({
+  lineChartData = signal<ChartConfiguration<'line'>['data']>({
       labels: [],
       datasets: [],
     });
   
-    constructor() {
+  constructor(private dialog:MatDialog) {
       effect(() => {
       const data = this.attentionData();
       if (!data) return;
@@ -78,7 +80,14 @@ export class AttentionChartComponent {
       },
     };
 
-
+  showAttentionStudents(){
+      if(!this.session()?.sessionId) return;
+      this.dialog.open(AttentionTableComponent,{ 
+        data: { sessionId: this.session()!.sessionId },
+        minWidth:'400px',
+        maxWidth: '900px'
+      })
+    }
 
   //  @Input() nivelesAtencion: LineChart | null = null;
 
