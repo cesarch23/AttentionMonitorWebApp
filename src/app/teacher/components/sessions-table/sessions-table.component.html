@@ -14,10 +14,14 @@
               <td mat-cell *matCellDef="let element"> {{ element.description }} </td>
             </ng-container>
             <ng-container matColumnDef="date">
-              <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Fecha de inicio </th>
-              <td mat-cell *matCellDef="let element"> {{element.date | date:'dd/MM/yyyy' }} {{element.startHours}} </td>
+              <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Fecha </th>
+              <td mat-cell *matCellDef="let element"> {{element.date | date:'dd/MM/yyyy' }} </td>
             </ng-container>
             <ng-container matColumnDef="startHours">
+              <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Hora de inicio </th>
+              <td mat-cell *matCellDef="let element"> {{element.startHours}} </td>
+            </ng-container>
+            <ng-container matColumnDef="duracion">
               <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Duracion </th>
               <td mat-cell *matCellDef="let element"> {{element.startHours | duration:element.endHours }} </td>
             </ng-container>
@@ -29,9 +33,9 @@
               </td>
             </ng-container>
             
-            <ng-container matColumnDef="numberStudentConected">
+            <ng-container matColumnDef="numberStudentConected"  >
               <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Cantidad de conectados</th>
-              <td mat-cell *matCellDef="let element"> {{ element.numberStudentConected }} </td>
+              <td mat-cell *matCellDef="let element"class="center" > {{ element.numberStudentConected }} </td>
             </ng-container>
           
             <ng-container matColumnDef="acciones">

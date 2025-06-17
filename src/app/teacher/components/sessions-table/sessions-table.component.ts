@@ -40,7 +40,7 @@ export class SessionsTableComponent implements AfterViewInit,OnInit {
   sessions = input<Session[]>([])
   filter = input<boolean>(false)
   courseId = input<string>("")
-  sessionColumns = ['sessionId','course','description','date','startHours','estado','numberStudentConected','acciones'] 
+  sessionColumns = ['sessionId','course','description','date','startHours', 'duracion','estado','numberStudentConected','acciones'] 
   private dialog = inject(MatDialog);
   sessionDataSource = new MatTableDataSource<Session>()
   

@@ -7,3 +7,6 @@ table{
     top: 0;
     z-index: 1000;
 }
+.center{
+    text-align: center;
+}
