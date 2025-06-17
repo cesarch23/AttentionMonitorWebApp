@@ -66,15 +66,14 @@ export interface SessionDialogData{
     title:string;
     isEdit:boolean;
 }
-export interface SessionForm{
-    /**description
-startHours
-endHours
-date
-courseId
-     * 
-     */
-    
+export interface LineChart{
+    labels:string[];
+    data:number[]
+}
+export interface AbsentChart{
+    data:number[]
+}
+export interface PhoneLineChart extends LineChart{
 }
 export interface SessionRegister {
     description: string;
