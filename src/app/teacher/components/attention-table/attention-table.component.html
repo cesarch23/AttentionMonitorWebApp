@@ -1,0 +1,47 @@
+<mat-dialog-content>
+    @if (attentionRequestStatus=== 'loading') {
+        <span class="loader"></span>
+    }
+    
+    @if (attentionRequestStatus=== 'failed') {
+        <p >  {{ messageError}} </p>
+      }
+    
+     @if (attentionRequestStatus=== 'success') {
+        @if (this.dataSource.data.length <= 0) {
+            <p>No hay estudiantes para mostrar</p>
+        }
+        @else {
+            <table mat-table [dataSource]="dataSource" matSort>
+    
+                <ng-container matColumnDef="paternalLastname">
+                  <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Estudiante </th>
+                  <td mat-cell *matCellDef="let element"> {{element.studentDTO.name + " " + element.studentDTO.paternalLastname + " " +element.studentDTO.maternalLastname }} </td>
+                </ng-container>
+                <ng-container matColumnDef="actividad">
+                  <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Porcentaje de atención </th>
+                  <td mat-cell *matCellDef="let element"> {{element.attention*100}}% </td>
+                </ng-container>
+                <ng-container matColumnDef="minutesUsePhone">
+                  <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Tiempo de ausencia </th>
+                  <td mat-cell *matCellDef="let element"> {{ element.minutesSomnolence }}minutos </td>
+                </ng-container>
+                <ng-container matColumnDef="description">
+                  <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Descripcion</th>
+                  <td mat-cell *matCellDef="let element"> {{ element.session.description }} </td>
+                </ng-container>
+                <ng-container matColumnDef="minutesElapsedInSession">
+                  <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Tiempo transcurrido de la sesión</th>
+                  <td mat-cell *matCellDef="let element"> {{ element.minutesElapsedInSession }} minutos </td>
+                </ng-container>
+    
+                <tr mat-header-row *matHeaderRowDef="itemsColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: itemsColumns;"></tr>
+        </table>
+        <mat-paginator  [pageSizeOptions]="[4, 10, 20]" showFirstLastButtons
+            aria-label="Seleccione las paginas ">
+        </mat-paginator>
+        }
+    
+     }
+</mat-dialog-content>
