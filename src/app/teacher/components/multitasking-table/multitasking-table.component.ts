@@ -30,6 +30,7 @@ export class MultitaskingTableComponent implements OnInit,AfterViewInit{
 
 
     ngOnInit(): void {
+      this.attentionRequestStatus='loading'
       this.attentionServ.getAttentionMultitaskingDetails(this.data.sessionId).subscribe({
         next:(attentions)=>{
           this.attentionRequestStatus='success'
