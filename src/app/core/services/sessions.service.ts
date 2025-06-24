@@ -35,6 +35,9 @@ export class SessionsService {
                 if(error.status === HttpStatusCode.Unauthorized){
                   return throwError(()=> new Error('Credenciales inválidas. vuelve a iniciar sesión'))
                 }
+                if(error.status === HttpStatusCode.Forbidden){
+                  return throwError(()=> new Error('No tiene permiso para ver la información'))
+                }
                 return throwError(()=> new Error('Ups algo salio mal, intentelo más tarde'))
               })
             );
@@ -49,6 +52,9 @@ export class SessionsService {
               catchError((error:HttpErrorResponse)=>{
                 if(error.status === HttpStatusCode.Unauthorized){
                   return throwError(()=> new Error('Credenciales inválidas. vuelve a iniciar sesión'))
+                }
+                if(error.status === HttpStatusCode.Forbidden){
+                  return throwError(()=> new Error('No tiene permiso para ver la información'))
                 }
                 return throwError(()=> new Error('Ups algo salio mal, intentelo más tarde'))
               })
@@ -67,6 +73,9 @@ export class SessionsService {
         if(error.status === HttpStatusCode.Unauthorized){
           return throwError(()=> new Error('Credenciales inválidas. vuelve a iniciar sesión'))
         }
+        if(error.status === HttpStatusCode.Forbidden){
+          return throwError(()=> new Error('No tiene permiso para ver la información'))
+        }
         return throwError(()=> new Error('Ups algo salio mal, intentelo más tarde'))
       })
     );
@@ -79,6 +88,9 @@ export class SessionsService {
       catchError((error)=>{
         if(error.status === HttpStatusCode.Unauthorized){
           return throwError(()=> new Error('Credenciales inválidas. vuelve a iniciar sesión'))
+        }
+        if(error.status === HttpStatusCode.Forbidden){
+          return throwError(()=> new Error('No tiene permiso para ver la información'))
         }
         return throwError(()=> new Error('Ups algo salio mal, intentelo más tarde'))
       })
@@ -94,6 +106,9 @@ export class SessionsService {
         if(error.status === HttpStatusCode.Unauthorized){
           return throwError(()=> new Error('Credenciales inválidas. vuelve a iniciar sesión'))
         }
+        if(error.status === HttpStatusCode.Forbidden){
+          return throwError(()=> new Error('No tiene permiso para ver la información'))
+        }
         if(error.status === HttpStatusCode.Conflict){
             return throwError(()=> new Error('No se pudo eliminar,la sesion tiene registros asociados'))
         }
@@ -106,6 +121,9 @@ export class SessionsService {
       catchError((error)=>{
         if(error.status === HttpStatusCode.Unauthorized){
           return throwError(()=> new Error('Credenciales inválidas. vuelve a iniciar sesión'))
+        }
+        if(error.status === HttpStatusCode.Forbidden){
+          return throwError(()=> new Error('No tiene permiso para ver la información'))
         }
         if(error.status === HttpStatusCode.NotFound){
             return throwError(()=> new Error('La sesion aun no fue creada'))
