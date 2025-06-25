@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { AuthService } from './auth.service';
-import { enviroment } from '../../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { setCachingEnabled } from '../interceptors/token.interceptor';
 import { Course } from '../models/model.interface';
 import { catchError, Observable, retry, switchMap, tap, throwError } from 'rxjs';
@@ -12,7 +12,7 @@ import { catchError, Observable, retry, switchMap, tap, throwError } from 'rxjs'
 export class CourseService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
-  private url = `${enviroment.BASE_URL}/cursos`;
+  private url = `${environment.BASE_URL}/cursos`;
 
   private coursesSignal = signal<Course[]>([]);
   courses$ = this.coursesSignal.asReadonly()

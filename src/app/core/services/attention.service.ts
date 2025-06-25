@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { enviroment } from '../../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { HttpClient, HttpStatusCode } from '@angular/common/http';
 import { TokenService } from './token.service';
 import { catchError, Observable, throwError } from 'rxjs';
@@ -14,7 +14,7 @@ import { AttentionInfo } from '../../student/pages/home/home.component';
 export class AttentionService {
   
 
-  private url = `${enviroment.BASE_URL}/atenciones`
+  private url = `${environment.BASE_URL}/atenciones`
   
   constructor(
       private http: HttpClient,

@@ -1,7 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { AuthService } from './auth.service';
 import { HttpClient, HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
-import { enviroment } from '../../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { Session, SessionRegister, TeacherProfile } from '../models/model.interface';
 import { setCachingEnabled } from '../interceptors/token.interceptor';
 import { BehaviorSubject, catchError, Observable, retry, switchMap, tap, throwError } from 'rxjs';
@@ -14,7 +14,7 @@ import { DateTime } from 'luxon';
 export class SessionsService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
-  private url = `${enviroment.BASE_URL}/sesiones`;
+  private url = `${environment.BASE_URL}/sesiones`;
 
   private sessionsSignal = signal<Session[]>([]); // Adjust the type as needed
   sessions$ = this.sessionsSignal.asReadonly();
