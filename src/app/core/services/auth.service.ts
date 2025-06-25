@@ -1,11 +1,11 @@
 import { HttpClient, HttpContext, HttpErrorResponse, HttpResponse, HttpStatusCode } from '@angular/common/http';
 import { Injectable, signal, ɵsetCurrentInjector } from '@angular/core';
-import { environment } from '../../../environments/environment';
 import { catchError, Observable, of, retry, switchMap, tap, throwError } from 'rxjs';
 import { TokenService } from './token.service';
 import { Course, Gender, StudentProfile, TeacherProfile, UpdatePassword, UserRegister, UserUpdate } from '../models/model.interface';
 import { Router } from '@angular/router';
 import { EXPECT_TOKEN_IN_RESPONSE, setCachingEnabled } from '../interceptors/token.interceptor';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'

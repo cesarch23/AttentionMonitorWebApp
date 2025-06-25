@@ -1,10 +1,10 @@
 import { HttpClient, HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { AuthService } from './auth.service';
-import { environment } from '../../../environments/environment';
 import { setCachingEnabled } from '../interceptors/token.interceptor';
 import { Course } from '../models/model.interface';
 import { catchError, Observable, retry, switchMap, tap, throwError } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'

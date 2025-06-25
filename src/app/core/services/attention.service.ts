@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
+
 import { HttpClient, HttpStatusCode } from '@angular/common/http';
 import { TokenService } from './token.service';
 import { catchError, Observable, throwError } from 'rxjs';
@@ -7,6 +7,7 @@ import { AbsentChart, Attention, LineChart, PhoneLineChart } from '../models/mod
 import { setCachingEnabled } from '../interceptors/token.interceptor';
 import { AuthService } from './auth.service';
 import { AttentionInfo } from '../../student/pages/home/home.component';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
