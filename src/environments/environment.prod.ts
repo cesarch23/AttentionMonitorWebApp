@@ -1,4 +1,4 @@
 export const environment = {
     production:true,
-    BASE_URL:"http://localhost:8082/api/v1"
+    BASE_URL:"https://attention-api.agreeablerock-80a6eed3.eastus.azurecontainerapps.io/api/v1"
 }
