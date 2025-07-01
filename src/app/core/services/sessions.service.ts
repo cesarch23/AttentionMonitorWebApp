@@ -64,8 +64,7 @@ export class SessionsService {
   add(session:SessionRegister){
     const sessionDuration = getDurationInMinutes(session.startHours, session.endHours)
     const date = DateTime.fromJSDate(session.date).toFormat('yyyy-MM-dd');
-    console.log("sesion para agregar",session,date)
-     return this.http.post<Session>(`${this.url}`,{...session,sessionDuration,date},{ context:setCachingEnabled() }).pipe(
+     return this.http.post<Session>(`${this.url}`,{...session,sessionDurationMinutes: sessionDuration,date},{ context:setCachingEnabled() }).pipe(
       tap((session: Session) => {
         this.sessionsSignal.update((current)=> [...current,session]); 
       }),
