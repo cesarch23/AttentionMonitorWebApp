@@ -54,7 +54,7 @@ export class AbsenceChartComponent {
     const input = this.absentData();
     const values = input?.data?.length === 2
       ? input.data
-      : [100, 0];
+      : [0, 100];
 
     return {
       labels: ['Ausentes', 'No Ausentes'],

@@ -14,13 +14,15 @@ import {
   FaceLandmarkerOptions, 
   ObjectDetectorOptions, 
   FaceLandmarkerResult,
-  ObjectDetectorResult} from '@mediapipe/tasks-vision';
+  ObjectDetectorResult,
+  NormalizedLandmark} from '@mediapipe/tasks-vision';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { NotificationService } from '../../../core/services/notification.service';
 import { RequestStatus, Session } from '../../../core/models/model.interface';
 import { SessionsService } from '../../../core/services/sessions.service';
 import { DateTime } from 'luxon';
+import { AuthService } from '../../../core/services/auth.service';
 export interface AttentionInfo {
   minutesElapsedInSession: number;
   usePhone: boolean;
@@ -51,30 +53,45 @@ interface Activity { activity: string; time: number }
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent {
+export class HomeComponent implements OnDestroy {
   
   private attentionServ = inject(AttentionService)
   private notificationServ = inject(NotificationService)
   private sessionServ = inject(SessionsService)
   private snackBar = inject(MatSnackBar);
+  private authServ = inject(AuthService)
 
   sessionId = new FormControl<string | null>(null,Validators.required)
   errorMessage = '';
-  actividades:{activity:string,time:number}[] = [
-    // {activity:"Somnolencia",time:8},
-    // {activity:"Uso de telefono",time:8}
-  ]
+  actividades:{activity:string,time:number}[] = []
   sessionActiva!:Session;
   activityColumns = ['actividad','time'] 
   activityDataSource = new MatTableDataSource<{activity:string,time:number}>(this.actividades)
   conected:boolean = false; 
   conectRequestStatus:RequestStatus = 'init'
   isCameraActive = false;
-  attention!:AttentionInfo;
   faceLandmarker!: FaceLandmarker;
   objectDetector!: ObjectDetector;
   videoInterval: any;
   modelosListos = false;
+  earThreshold = 0.2;
+  lastElapsedSent: number | null = null;
+
+
+  attention:AttentionInfo = {
+    minutesElapsedInSession: 0,
+    usePhone: false,
+    minutesUsePhone: 0,
+    isSomnolence: false,
+    numberOfYawns: 0, 
+    minutesSomnolence: 0,
+    isAbsent: false,
+    minutesAbsent: 0,
+    attention: 0,
+    isConnectedFromBegining: true,
+    studentId: '', 
+    session: { sessionId: '' }, // se llenará al conectarse a la sesión
+};
 
    @ViewChild('video') videoRef!: ElementRef<HTMLVideoElement>;
 
@@ -88,7 +105,7 @@ export class HomeComponent {
   minuteCounter = 0;
 
   async activarCamara() {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480, facingMode: 'user' } });
     this.videoRef.nativeElement.srcObject = stream;
     this.videoRef.nativeElement.play();
     this.isCameraActive = true;
@@ -112,23 +129,23 @@ export class HomeComponent {
        },
       scoreThreshold: 0.1,
       runningMode: 'VIDEO',
-      categoryAllowlist: ['person', 'cell phone'],
+       categoryAllowlist: ['person', 'cell phone'],
     });
     this.modelosListos = true;
-    this.notificationServ.show('Modelos cargados correctamente', 'success');
+    this.notificationServ.show('Modelos cargados correctamente, ya puedes conectarte a la sesión', 'success');
   }
 
   conectToSession() {
     if (!this.sessionId.value?.trim() || !this.modelosListos) {
-      console.log("modelos aun no estan listos")
+      this.notificationServ.show('Espere por favor, esta cargando los archivos','warning')
       return;
     }
-    this.conectRequestStatus = 'loading';
-    // retornamos la sesion, si es que el tiempo corresponde al inicio o ya inicio entonces conectamos o sino le decimo que aun no se analiza pro que la sesion no inicia
+    this.conectRequestStatus = 'loading'
+    // inicia
 
     this.sessionServ.getSessionById(this.sessionId.value).subscribe({
       next:(session:Session)=>{
-        this.sessionActiva = {...session}
+        this.sessionActiva = structuredClone(session);
         console.log("session activa: ",this.sessionActiva)
         if(this.isNowWithinSession(session)){
           
@@ -165,88 +182,117 @@ export class HomeComponent {
   }
 
   async iniciarAnalisis() {
-    //this.minuteCounter = 0;
-    //inicializamos el tiempo de sesion de intervalos de 10 minutos
-    this.videoInterval = setInterval(() => this.detectFrame(), 1000); // cada 1 segundo hace el analisis
+    this.videoInterval = setInterval(() => this.detectFrame(), 10000); // cada 10 seg
   }
 
   async detectFrame() {
     if (!this.modelosListos) return;
+    console.log("modelos listos para deteccion")
     const video = this.videoRef.nativeElement;
     const now = performance.now();
-
-    const faceResult: FaceLandmarkerResult = await this.faceLandmarker.detectForVideo(video, now);
-    const objectResult: ObjectDetectorResult = await this.objectDetector.detectForVideo(video, now);
-
-    // SOMNOLENCIA: Ojos cerrados (simplificado)
-    // const eyesClosed = this.ojosCerrados(faceResult);
-    // if (eyesClosed) {
-    //   //iniciarlizar el tiempo de somnolencia
-    //   this.minutesSomnolence++;
-    //   // se verifica si el tiempo es mayor a 2 minutos es somnolencia y mandamos alarta
     
-    //   this.isSomnolence = this.minutesSomnolence >= 1;
-    //   this.pushActividad('Somnolencia', this.minutesSomnolence);
-    //   console.log("detecciont de somolencia")
-    //   this.alerta('Somnolencia detectada');
-    // } 
-    // else {
-    //   this.minutesSomnolence = 0;
-    //   this.isSomnolence = false;
-    // }
+    try{
+        const faceResult: FaceLandmarkerResult = await this.faceLandmarker.detectForVideo(video, now);
+        const objectResult: ObjectDetectorResult = await this.objectDetector.detectForVideo(video, now);
+        console.log("obj restult ",objectResult)
+    
+        this.evaluateSomnolence(faceResult);
+        this.evaluateObjects(objectResult);
+    }
+    catch(e){
+        console.log("Error al detectar objetos o somnolencia: ", e);
+    }
+    const elapsedMinutes = this.getElapsedMinutesIfMultipleOfTen();
 
-    //AUSENCIA
-    const hasPerson = objectResult.detections.some(d =>
-      d.categories[0].categoryName == 'person');
-    if (!hasPerson) {
-      // no se detecto person entonces se inicio el temporizador
-      this.minutesAbsent++;
-      this.isAbsent = this.minutesAbsent >= 1;
-      // se muestra alerta 
-      this.pushActividad('Ausencia', this.minutesAbsent);
+    if( elapsedMinutes !==null ){
+        this.enviarAttentionInfo(elapsedMinutes);
+        this.resetAttentionInfo();
+        
+    }    
+  }
+  
+  evaluateSomnolence(result: FaceLandmarkerResult) {
+    if (result.faceLandmarks.length === 0) return;
+    const [leftEAR, rightEAR] = this.getEyesEAR(result.faceLandmarks[0]);
+    const avgEAR = (leftEAR + rightEAR) / 2;
+
+    if (avgEAR < this.earThreshold) {
+      this.minutesSomnolence++;
+      if (this.minutesSomnolence >= 1 ) {
+        this.isSomnolence = true;
+        this.attention.isSomnolence = true;
+        this.attention.minutesSomnolence = this.minutesSomnolence*6/60;        
+        this.pushActividad('Somnolencia', this.minutesSomnolence*6/60)
+        this.alerta("Somolencia detectada ")
+      }
     } else {
-      console.log('Person detectada');
-      // ya regreso el person
-      //entonces se inicializa el tiempo
+      this.minutesSomnolence = 0;
+      this.isSomnolence = false;
+    }
+  }
+  evaluateObjects(resultObj: ObjectDetectorResult) {
+    console.log("detections ", resultObj.detections)
+    if(resultObj.detections.length === 0 ) return;
+    const hasPhone = resultObj.detections.some(d => d.categories[0].categoryName === 'cell phone');
+    const hasPerson = resultObj.detections.some(d => d.categories[0].categoryName === 'person');
+    
+    console.log("hay person ",hasPerson,)
+    console.log("has phone init ",hasPhone)
+    //
+    
+    if (hasPerson) {
+        this.minutesAbsent++;
+        if (this.minutesAbsent >= 1)  {
+            this.isAbsent = true;
+            this.attention.isAbsent = true;
+            this.attention.minutesAbsent = this.minutesAbsent*6/60;
+            this.pushActividad('Ausencia', this.minutesAbsent);
+            this.alerta('Ausencia detectada');
+            
+        }
+            
+    } else {
       this.minutesAbsent = 0;
       this.isAbsent = false;
     }
 
-    // USO DE CELULAR
-    // const hasPhone = objectResult.detections.some(d =>
-    //   d.categories[0].categoryName === 'cell phone');
-    // if (hasPhone) {
-    //   //VERIFICO CUANTO TIEMPO PASO, SI ES MULTIPLO DE 10 LO ENVIO EL DATO SI NO PASO. ADEMAS CONTROLO E INICIALIZO EL TIEMPO DE USO TELEFONO
-    //   this.minutesUsePhone++;
-    //   this.usePhone = true;
-    //   this.pushActividad('Uso de celular', this.minutesUsePhone);
-    //   console.log("detecciont de telefono")
-    // } else {
-    //   this.usePhone = false;
-    // }
-
-    // this.minuteCounter++;
-    
-    // if (this.getElapsedMinutesIfMultipleOfTen(this.sessionActiva)) {
-    // if (this.minuteCounter>=2) {
-        this.enviarAttentionInfo();
-        this.resetAnalisis();
-    // }
+    if (hasPhone) {
+      this.minutesUsePhone++;
+      console.log("use phone ",this.usePhone)
+      if (!this.usePhone) {
+          this.usePhone = true;
+          this.attention.usePhone = true;
+          this.attention.minutesUsePhone = this.minutesUsePhone*6/60;
+          this.pushActividad('Uso de celular', this.minutesUsePhone);
+          this.alerta('Uso de celular detectado');
+      }
+    } else {
+      this.usePhone = false;
+      this.minutesUsePhone = 0;
+    }
   }
+  getEyesEAR(landmarks: NormalizedLandmark[]): [number, number] {
+    const dist = (a: NormalizedLandmark, b: NormalizedLandmark) => Math.hypot(a.x - b.x, a.y - b.y);
 
-  ojosCerrados(result: FaceLandmarkerResult): boolean {
-    if (result.faceLandmarks.length === 0) return false;
-    // Aquí deberías implementar el cálculo del EAR (eye aspect ratio) para mayor precisión
-    return false;
+    const leftEAR = (
+      dist(landmarks[159], landmarks[145]) +
+      dist(landmarks[160], landmarks[144])
+    ) / (2.0 * dist(landmarks[33], landmarks[133]));
+
+    const rightEAR = (
+      dist(landmarks[386], landmarks[374]) +
+      dist(landmarks[385], landmarks[380])
+    ) / (2.0 * dist(landmarks[362], landmarks[263]));
+
+    return [leftEAR, rightEAR];
   }
 
   alerta(msg: string) {
-    // const audio = new Audio('/assets/sounds/alert.mp3');
-    // audio.play();
-    console.log("alerta: ",msg);
-    this.snackBar.open(msg, 'OK', { duration: 10000 }).onAction().subscribe(() => 
+    const audio = new Audio('/alerts/alert.mp3');
+    audio.play();
+    this.snackBar.open(msg, 'OK', { duration: 5000 }).onAction().subscribe(() => 
       {
-        //audio.pause()
+        audio.pause()
       });
   }
 
@@ -260,47 +306,50 @@ export class HomeComponent {
     this.activityDataSource.data = [...this.actividades];
   }
 
-  enviarAttentionInfo() {
-    //enviando datos
+  enviarAttentionInfo(minutesElapsedInSession: number = 10) {
+    const attentionSend = structuredClone(this.attention);
+    attentionSend.session.sessionId = this.sessionActiva.sessionId;
+    attentionSend.studentId = this.authServ.studentProfile$()?.studentId || '';
+    attentionSend.minutesElapsedInSession = minutesElapsedInSession;
 
-    const info: AttentionInfo = {
-      minutesElapsedInSession: 10,
-      usePhone: this.usePhone,
-      minutesUsePhone: this.minutesUsePhone,
-      isSomnolence: this.isSomnolence,
-      numberOfYawns: 0, // este dato no está aún calculado
-      minutesSomnolence: this.minutesSomnolence,
-      isAbsent: this.isAbsent,
-      minutesAbsent: this.minutesAbsent,
-      attention: 10 - (this.minutesSomnolence + this.minutesUsePhone + this.minutesAbsent),
-      isConnectedFromBegining: true,
-      studentId: '3e1cb06f-e215-45fb-900b-5915976b8909',
-      session: { sessionId: this.sessionId.value! },
-    };
-    console.log("envio de datos: ", info)
-    // this.attentionServ.registerAttention(info).subscribe(() => {
-    //   this.notificationServ.show('Atención registrada', 'success');
-    // });
+    this.attentionServ.registerAttention(attentionSend).subscribe(() => {
+        console.log("envio de datos: ", attentionSend)
+       
+    });
   }
 
-  resetAnalisis() {
-    clearInterval(this.videoInterval);
+  resetAttentionInfo() {
+    //clearInterval(this.videoInterval);
+    this.attention = {
+        minutesElapsedInSession: 0,
+        usePhone: false,
+        minutesUsePhone: 0,
+        isSomnolence: false,
+        numberOfYawns: 0, 
+        minutesSomnolence: 0,
+        isAbsent: false,
+        minutesAbsent: 0,
+        attention: 0,
+        isConnectedFromBegining: true,
+        studentId: '', 
+        session: { sessionId: '' }
+    };
+    this.isSomnolence = false;
+    this.isAbsent = false;
+    this.usePhone = false;
     this.minutesSomnolence = 0;
-    this.minutesUsePhone = 0;
     this.minutesAbsent = 0;
+    this.minutesUsePhone = 0;
     this.minuteCounter = 0;
-    this.iniciarAnalisis();
   }
   isNowWithinSession(session: Session): boolean {
     const now = DateTime.now();
-
-    // Detectar si es string o Date
+    // es string o Date
     let sessionDateLuxon: DateTime;
     if (typeof session.date === 'string') {
-      // Aceptamos string tipo "YYYY-MM-DD"
+      // string tipo "YYYY-MM-DD"
       sessionDateLuxon = DateTime.fromISO(session.date);
     } else {
-      // Si es tipo Date nativo
       sessionDateLuxon = DateTime.fromJSDate(session.date);
     }
 
@@ -314,29 +363,29 @@ export class HomeComponent {
 
     return isSameDay && isInTimeRange;
   }
-  getElapsedMinutesIfMultipleOfTen(session: Session): number | null {
-    const ZONE = 'America/Lima'; // o tu zona horaria real
+  getElapsedMinutesIfMultipleOfTen(): number | null {
+    const ZONE = 'America/Lima'; // zona horaria real
 
     const now = DateTime.now().setZone(ZONE);
 
     // Convertir session.date a ISO string si es Date
     const sessionDateStr = 
-      typeof session.date === 'string'
-        ? session.date
-        : DateTime.fromJSDate(session.date).toISODate();
+      typeof this.sessionActiva.date === 'string'
+        ? this.sessionActiva.date
+        : DateTime.fromJSDate(this.sessionActiva.date).toISODate();
 
-    // Combinar fecha con hora de inicio
-    const startDateTime = DateTime.fromISO(`${sessionDateStr}T${session.startHours}`, { zone: ZONE });
-
-    // Calcular minutos transcurridos
+    const startDateTime = DateTime.fromISO(`${sessionDateStr}T${this.sessionActiva.startHours}`, { zone: ZONE });
     const elapsed = Math.floor(now.diff(startDateTime, 'minutes').minutes);
-
-    // Validar si es múltiplo de 10 y menor o igual al límite
-    if (elapsed > 0 && elapsed % 1 === 0 && elapsed <= session.sessionDurationMinutes) {
-      return elapsed;
+    
+    if (elapsed > 0 && elapsed % 2 === 0 && elapsed <= this.sessionActiva.sessionDurationMinutes && elapsed !== this.lastElapsedSent) {
+        this.lastElapsedSent = elapsed;
+        return elapsed;
     }
 
     return null;
+  }
+  ngOnDestroy(): void {
+      clearInterval(this.videoInterval)
   }
 
 }
