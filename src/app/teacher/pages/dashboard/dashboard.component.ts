@@ -1,4 +1,4 @@
-import { Component, inject, signal, Signal } from '@angular/core';
+import { Component, inject, OnDestroy, signal, Signal } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
@@ -30,7 +30,7 @@ import { AttentionService } from '../../../core/services/attention.service';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnDestroy {
     //nivelesAtencion=[80, 85, 75, 70, 60, 65, 68, 70, 75, 78, 80, 82, 85];
     
     conected: boolean= false;
@@ -49,7 +49,7 @@ export class DashboardComponent {
     attenionAvrgRequest:RequestStatus = 'init'
     messageErrorAvrg:string = 'Ocurrio un error';
     
-    absenceInfo = signal<AbsentChart | null>(null);
+    absenceInfo = signal<AbsentChart>({data:[100,0]});
     absentRequest:RequestStatus = 'init'
     messageErrorAbsent:string = 'Ocurrio un error';
     
@@ -162,5 +162,8 @@ export class DashboardComponent {
       this.chargeSomnolenceData(this.sessionId.value || '');
       this.chargeAbsentData(this.sessionId.value || '');
       this.chargeAttentionAvrgData(this.sessionId.value || '');
+    }
+    ngOnDestroy(): void {
+        this.absenceInfo.set({data:[100,0]})
     }
 }
