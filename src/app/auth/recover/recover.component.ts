@@ -69,7 +69,7 @@ export class RecoverComponent {
             this.userFormVerified.setValue({email,code:null})
             this.updatePasswordForm.setValue({email,password:null})
             this.statusFormStudent = 'success'
-            this.notificationServ.show("Revisar tu correo e ingresa tu codigo de verificacion ",'success');
+            this.notificationServ.show("Revisa tu correo e ingresa tu codigo de verificacion ",'success');
           }
         },
         error:(errorMessage)=> {
