@@ -1,0 +1,88 @@
+.backgroud {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+ 
+}
+.backgroud .container{
+    width: 90%;
+    max-width: 411px;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 32px;
+
+    background-color: white;
+    padding: 16px 32px;
+    border-radius: 8px;
+    background: #FFF;
+    box-shadow: 0px 0px 4px 0px rgba(0, 92, 187, 0.25);
+}
+
+.container .header{
+    width: 100%;
+}
+.container .header h2{
+    color: var(--color-grey-500, #464B53);
+    text-align: center;
+    font-size: 40px;
+    font-weight: 700;
+}
+.container .header p{
+    color: var(--Colors-Grey-grey-300, #83868C);
+    font-size: 18px;
+    font-weight: 400;
+    text-align: center;
+    
+}
+.container  .taps{
+    width: 100%;
+    & .tap__group{
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+
+        & .tap__item{
+        }
+    }
+}
+.form{  
+    display: flex;
+    flex-direction: column;  
+    justify-content: center;
+    & .form__group{
+        width: 100%;
+    }
+    
+    & .forget__password{
+        color: var(--primary-color-500, #005CBB);
+        font-weight: 600;   
+        text-align: right;
+        text-decoration: underline;   
+        cursor: pointer;
+    }
+    & button{
+        font-weight: 600;
+        border-radius: 4px;
+        padding: 16px 32px;
+    }               
+                
+}
+.container .register{
+    color: #6C6C6C;
+    & span{
+        color: var(--primary-color-500, #005CBB);
+        font-weight: 600;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+}
+.actions{
+        display: flex;
+        justify-content: space-between;
+}

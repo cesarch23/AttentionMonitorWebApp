@@ -1,0 +1,172 @@
+<div class="backgroud">
+    <div class="container">
+      <div class="header">
+        <h2>Recuperar cuenta</h2>
+        @if(!userEmailVerified){
+            <p>Ingrese tu correo</p>
+        }
+        @if (userEmailVerified) {
+             <p>Ingrese el codigo de verificación que se te envio a tu correo</p>
+        }
+
+      </div>
+      <div class="taps">
+         @if (!userEmailVerified) {
+                <form action="#" [formGroup]="loginFormStudent" class="form" (ngSubmit)="verifyStudentEmail()">
+              <mat-form-field class="form__group">
+                <mat-label>Correo electrónico</mat-label>
+                <input
+                  matInput
+                  type="email"
+                  placeholder="Ingrese su correo electrónico"
+                  required
+                  formControlName="email"
+                  name="email"
+                  id="email"
+                />
+              </mat-form-field>
+              @if (loginFormStudent.touched && loginFormStudent.invalid) {
+                <mat-error class="error" >
+                  Completa correctamente todos los campos
+                </mat-error>
+              }
+             
+              <div class="actions">
+                    <button 
+                        mat-button
+                        type="button" 
+                        routerLink="/auth/login" 
+                     >Cancelar
+                    </button>
+
+                  <button type="submit"
+                    mat-flat-button
+                    class="form__button"
+                    [disabled]=" loginFormStudent.touched && !loginFormStudent.valid "
+                   >
+                   @if(statusFormStudent!=='loading'){
+                        <span>Siguiente</span>
+                   }
+                   @if(statusFormStudent==='loading'){
+                        <span class="loader"></span>
+                   }
+                  </button>
+              </div>
+            </form>
+            }
+        @if (userEmailVerified && !userCodeVerified) {
+                <form action="#" [formGroup]="userFormVerified" class="form" (ngSubmit)="verifyStudentCode()">
+                    <mat-form-field class="form__group">
+                        <mat-label>Correo electrónico</mat-label>
+                        <input
+                        matInput
+                        type="email"
+                        placeholder="Ingrese su correo electrónico"
+                        required
+                        formControlName="email"
+                        name="email"
+                        id="email"
+                        readonly
+                        />
+                    </mat-form-field>
+                    <mat-form-field class="form__group">
+                        <mat-label>Codigo</mat-label>
+                        <input
+                        matInput
+                        type="text"
+                        placeholder="Ingrese los 4 digitos"
+                        required
+                        formControlName="code"
+                        name="code"
+                        id="code"
+                        />
+                    </mat-form-field>
+              @if (userFormVerified.touched && userFormVerified.invalid) {
+                <mat-error class="error" >
+                  Completa correctamente todos los campos
+                </mat-error>
+              }
+             
+              <div class="actions">
+                    <button 
+                        mat-button
+                        type="button" 
+                        routerLink="/auth/login" 
+                     >Cancelar
+                    </button>
+
+                  <button type="submit"
+                    mat-flat-button
+                    class="form__button"
+                    [disabled]=" userFormVerified.touched && !userFormVerified.valid "
+                   >
+                   @if(statusFormVerified!=='loading'){
+                        <span>Verificar</span>
+                   }
+                   @if(statusFormVerified==='loading'){
+                        <span class="loader"></span>
+                   }
+                  </button>
+              </div>
+             </form>
+            }
+        @if(userCodeVerified){
+            <form action="#" [formGroup]="updatePasswordForm" class="form" (ngSubmit)="updatePassword()">
+                    <mat-form-field class="form__group">
+                        <mat-label>Correo electrónico</mat-label>
+                        <input
+                        matInput
+                        type="email"
+                        placeholder="Ingrese su correo electrónico"
+                        required
+                        formControlName="email"
+                        name="email"
+                        id="email"
+                        readonly
+                        />
+                    </mat-form-field>
+                    <mat-form-field class="form__group">
+                        <mat-label>Password</mat-label>
+                        <input
+                        matInput
+                        type="password"
+                        placeholder="Ingresa tu contraseña"
+                        required
+                        formControlName="password"
+                        name="password"
+                        id="password"
+                        />
+                    </mat-form-field>
+              @if (updatePasswordForm.touched && updatePasswordForm.invalid) {
+                <mat-error class="error" >
+                  Completa correctamente todos los campos
+                </mat-error>
+              }
+             
+              <div class="actions">
+                    <button 
+                        mat-button
+                        type="button" 
+                        routerLink="/auth/login" 
+                     >Cancelar
+                    </button>
+
+                  <button type="submit"
+                    mat-flat-button
+                    class="form__button"
+                    [disabled]=" updatePasswordForm.touched && !updatePasswordForm.valid "
+                   >
+                   @if(statusUpdatePasswordForm!=='loading'){
+                        <span>Cambiar contraseña</span>
+                   }
+                   @if(statusUpdatePasswordForm==='loading'){
+                        <span class="loader"></span>
+                   }
+                  </button>
+              </div>
+             </form>
+        }
+      </div>
+       
+    </div>
+</div>
