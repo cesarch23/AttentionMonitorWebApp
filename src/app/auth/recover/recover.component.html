@@ -5,8 +5,11 @@
         @if(!userEmailVerified){
             <p>Ingrese tu correo</p>
         }
-        @if (userEmailVerified) {
+        @if (userEmailVerified && !userCodeVerified) {
              <p>Ingrese el codigo de verificación que se te envio a tu correo</p>
+        }
+        @if(userCodeVerified){
+            <p>Ingrese tu nueva contraseña</p>
         }
 
       </div>
@@ -150,7 +153,6 @@
                         routerLink="/auth/login" 
                      >Cancelar
                     </button>
-
                   <button type="submit"
                     mat-flat-button
                     class="form__button"
