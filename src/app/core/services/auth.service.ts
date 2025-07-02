@@ -49,6 +49,30 @@ export class AuthService {
 
     )
   }
+  verifyUserEmail(email:string){
+     return this.http.post<boolean>(`${this.BASE_URL}/auth/verify-email`,email)
+    .pipe(
+      catchError((error:HttpErrorResponse)=>{
+        return throwError(()=> new Error('Ups algo salio mal, intentelo más tarde'))
+      })
+    )
+  }
+  verifyUserCode(email:string, code:string){
+     return this.http.post<boolean>(`${this.BASE_URL}/auth/verify-code`,{email,code})
+    .pipe(
+      catchError((error:HttpErrorResponse)=>{
+        return throwError(()=> new Error('Ups algo salio mal, intentelo más tarde'))
+      })
+    )
+  }
+  udpdatePassword(email:string, password:string){
+     return this.http.post<boolean>(`${this.BASE_URL}/auth/update-password`,{email,password})
+    .pipe(
+      catchError((error:HttpErrorResponse)=>{
+        return throwError(()=> new Error('Ups algo salio mal, intentelo más tarde'))
+      })
+    )
+  }
   registerTeacher(userRegister:UserRegister){
     return this.http.post(`${this.BASE_URL}/auth/profesor`,userRegister)
     .pipe(
