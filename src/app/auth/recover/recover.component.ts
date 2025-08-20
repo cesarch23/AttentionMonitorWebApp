@@ -37,32 +37,32 @@ export class RecoverComponent {
   private authService = inject(AuthService)
 
   loginFormStudent: FormGroup = new FormGroup({
-    email: new FormControl<null | string>(null, [Validators.required, Validators.email]),
+    email: new FormControl<null | string>(null, [Validators.required, Validators.pattern(/^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/)]),
   })
   userFormVerified : FormGroup = new FormGroup({
-    email: new FormControl<null | string>(null, [Validators.required, Validators.email]),
-    code: new FormControl<null | string>(null, [Validators.required, Validators.minLength(4), Validators.maxLength(4)]),
+    email: new FormControl<null | string>(null, [Validators.required, Validators.pattern(/^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/)]),
+    code: new FormControl<null | number>(null, [Validators.required, Validators.min(1000), Validators.max(9999)]),
     
   })
   updatePasswordForm : FormGroup = new FormGroup({
-    email: new FormControl<null | string>(null, [Validators.required, Validators.email]),
+    email: new FormControl<null | string>(null, [Validators.required, Validators.pattern(/^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/)]),
     password: new FormControl<null | string>(null, [Validators.required, Validators.minLength(8), Validators.maxLength(20)]),
     
   })
   
-  
+  //step 1
   verifyStudentEmail(){
     this.loginFormStudent.markAllAsTouched();
     if(this.loginFormStudent.invalid) return;
     const {email } = this.loginFormStudent.getRawValue();
   
     this.statusFormStudent = 'loading';
-    this.authService.verifyUserEmail(email).subscribe({
-        next:(isVerified:boolean)=>{
+    this.authService.sendRecoverEmailAndSentEmail(email).subscribe({
+        next:(isEmailSent:boolean)=>{
          
-          this.userEmailVerified = isVerified;
-          if(!isVerified){
-            this.notificationServ.show("El correo no está registrado",'error');
+          this.userEmailVerified = isEmailSent;
+          if(!isEmailSent){
+            this.notificationServ.show("No se pudo enviar el código, intentelo más tarde",'warning');
             this.statusFormStudent = 'failed';
           }
           else{

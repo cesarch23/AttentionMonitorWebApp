@@ -49,10 +49,13 @@ export class AuthService {
 
     )
   }
-  verifyUserEmail(email:string){
-     return this.http.post<boolean>(`${this.BASE_URL}/auth/verify-email`,email)
+  sendRecoverEmailAndSentEmail(email:string){
+     return this.http.post<boolean>(`${this.BASE_URL}/auth/sendMail`,{email})
     .pipe(
       catchError((error:HttpErrorResponse)=>{
+        if(error.status === HttpStatusCode.NotFound) {
+          return throwError(()=> new Error('El usuario no esta registrado'))
+        }
         return throwError(()=> new Error('Ups algo salio mal, intentelo más tarde'))
       })
     )

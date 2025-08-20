@@ -27,12 +27,13 @@
                   name="email"
                   id="email"
                 />
+                @if(loginFormStudent.controls['email'].hasError('required')){
+                  <mat-error>Este campo es obligatorio</mat-error>
+                }
+                @if(loginFormStudent.controls['email'].hasError('pattern')){
+                  <mat-error>Ingrese un correo electrónico válido</mat-error>
+                }
               </mat-form-field>
-              @if (loginFormStudent.touched && loginFormStudent.invalid) {
-                <mat-error class="error" >
-                  Completa correctamente todos los campos
-                </mat-error>
-              }
              
               <div class="actions">
                     <button 
@@ -76,19 +77,17 @@
                         <mat-label>Codigo</mat-label>
                         <input
                         matInput
-                        type="text"
+                        type="number"
                         placeholder="Ingrese los 4 digitos"
                         required
                         formControlName="code"
                         name="code"
                         id="code"
                         />
+                        @if (userFormVerified.controls['code'].hasError('min') || userFormVerified.controls['code'].hasError('max')) {
+                            <mat-error>Ingrese un código válido de <strong>4 dígitos</strong> </mat-error>
+                        }
                     </mat-form-field>
-              @if (userFormVerified.touched && userFormVerified.invalid) {
-                <mat-error class="error" >
-                  Completa correctamente todos los campos
-                </mat-error>
-              }
              
               <div class="actions">
                     <button 
