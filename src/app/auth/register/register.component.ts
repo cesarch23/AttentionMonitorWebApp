@@ -40,7 +40,7 @@ export class RegisterComponent {
     constructor(){}
     
      registerFormStudent: FormGroup = new FormGroup({
-      email: new FormControl<null | string>(null, [Validators.required, Validators.email, Validators.pattern(/^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/)]),
+      email: new FormControl<null | string>(null, [Validators.required, Validators.pattern(/^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/)]),
       name: new FormControl<null | string>(null, [Validators.required]),
       maternalLastname: new FormControl<null | string>(null, [Validators.required]),
       paternalLastname: new FormControl<null | string>(null, [Validators.required]),
@@ -48,7 +48,7 @@ export class RegisterComponent {
       password: new FormControl < null | string > (null, [Validators.required,Validators.minLength(8), Validators.maxLength(20)]),
     })
      registerFormTeacher: FormGroup = new FormGroup({
-      email: new FormControl<null | string>(null, [Validators.required, Validators.email]),
+      email: new FormControl<null | string>(null, [Validators.required, Validators.pattern(/^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/)]),
       name: new FormControl<null | string>(null, [Validators.required]),
       maternalLastname: new FormControl<null | string>(null, [Validators.required]),
       paternalLastname: new FormControl<null | string>(null, [Validators.required]),
