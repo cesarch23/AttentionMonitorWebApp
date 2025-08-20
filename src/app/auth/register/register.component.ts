@@ -9,6 +9,7 @@ import { RequestStatus } from '../../core/models/model.interface';
 import { NotificationService } from '../../core/services/notification.service';
 import { AuthService } from '../../core/services/auth.service';
 import { MatSelectModule } from '@angular/material/select';
+import { AsyncPipe, JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-register',
@@ -21,6 +22,8 @@ import { MatSelectModule } from '@angular/material/select';
     MatTabsModule,
     RouterLink,
     MatSelectModule,
+    JsonPipe,
+    AsyncPipe
 
   ],
   templateUrl: './register.component.html',
@@ -37,7 +40,7 @@ export class RegisterComponent {
     constructor(){}
     
      registerFormStudent: FormGroup = new FormGroup({
-      email: new FormControl<null | string>(null, [Validators.required, Validators.email]),
+      email: new FormControl<null | string>(null, [Validators.required, Validators.email, Validators.pattern(/^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/)]),
       name: new FormControl<null | string>(null, [Validators.required]),
       maternalLastname: new FormControl<null | string>(null, [Validators.required]),
       paternalLastname: new FormControl<null | string>(null, [Validators.required]),
@@ -54,6 +57,7 @@ export class RegisterComponent {
     })
   
     onSubmitStudent(){
+      console.log(this.registerFormStudent)
       this.registerFormStudent.markAllAsTouched();
       if(this.registerFormStudent.invalid)
         return;

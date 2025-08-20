@@ -64,6 +64,11 @@
                   name="email"
                   id="email"
                 />
+                @if(registerFormStudent.controls['email'].hasError('pattern')){
+                  <mat-error>
+                    Ingresa un correo válido
+                  </mat-error>
+                }
               </mat-form-field>
               <mat-form-field class="form__group">
                 <mat-label>Contraseña</mat-label>
@@ -74,10 +79,14 @@
                   required
                   formControlName="password"
                 />
+                @if (registerFormStudent.controls['password'].hasError('minlength') || registerFormStudent.controls['password'].hasError('maxlength')) {
+                  <mat-error>Ingrese entre 8 y 20 caracteres</mat-error>
+                }
               </mat-form-field>
+              
               @if (registerFormStudent.touched && registerFormStudent.invalid) {
                 <mat-error class="error" >
-                  Completa correctamente todos los campos
+                  Completa correctamente todos los campos obligatorios
                 </mat-error>
               }
               <button type="submit"
