@@ -35,11 +35,11 @@ export class LoginComponent {
   constructor(){}
   
    loginFormStudent: FormGroup = new FormGroup({
-    email: new FormControl<null | string>(null, [Validators.required, Validators.email]),
+    email: new FormControl<null | string>(null, [Validators.required, Validators.pattern(/^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/)]),
     password: new FormControl < null | string > (null, [Validators.required,Validators.minLength(8), Validators.maxLength(20)]),
   })
    loginFormTeacher: FormGroup = new FormGroup({
-    email: new FormControl<null | string>(null, [Validators.required, Validators.email]),
+    email: new FormControl<null | string>(null, [Validators.required, Validators.pattern(/^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/)]),
     password: new FormControl < null | string > (null, [Validators.required,Validators.minLength(8), Validators.maxLength(20)]),
   })
  

@@ -19,6 +19,12 @@
                   name="email"
                   id="email"
                 />
+                @if(loginFormStudent.controls['email'].hasError('required')){
+                  <mat-error>Este campo es obligatorio</mat-error>
+                }
+                @if(loginFormStudent.controls['email'].hasError('pattern')){
+                  <mat-error>Ingrese un correo electrónico válido</mat-error>
+                }
               </mat-form-field>
               <mat-form-field class="form__group">
                 <mat-label>Contraseña</mat-label>
@@ -29,12 +35,14 @@
                   required
                   formControlName="password"
                 />
+                @if(loginFormStudent.controls['password'].hasError('required')){
+                  <mat-error>Este campo es obligatorio</mat-error>
+                }
+                @if (loginFormStudent.controls['password'].hasError('minlength') || loginFormStudent.controls['password'].hasError('maxlength')) {
+                  <mat-error>Ingrese entre 8 y 20 caracteres</mat-error>
+                }
               </mat-form-field>
-              @if (loginFormStudent.touched && loginFormStudent.invalid) {
-                <mat-error class="error" >
-                  Completa correctamente todos los campos
-                </mat-error>
-              }
+              
               <p class="forget__password" routerLink="/auth/recover" > Olvide mi contraseña</p>
               <button type="submit"
                 mat-flat-button
@@ -64,6 +72,12 @@
                   name="email"
                   id="email"
                 />
+                @if(loginFormTeacher.controls['email'].hasError('required')){
+                  <mat-error>Este campo es obligatorio</mat-error>
+                }
+                @if(loginFormTeacher.controls['email'].hasError('pattern')){
+                  <mat-error>Ingrese un correo electrónico válido</mat-error>
+                }
               </mat-form-field>
               <mat-form-field class="form__group">
                 <mat-label>Contraseña</mat-label>
@@ -74,12 +88,13 @@
                   required
                   formControlName="password"
                 />
+                 @if(loginFormTeacher.controls['password'].hasError('required')){
+                  <mat-error>Este campo es obligatorio</mat-error>
+                }
+                @if (loginFormTeacher.controls['password'].hasError('minlength') || loginFormTeacher.controls['password'].hasError('maxlength')) {
+                  <mat-error>Ingrese entre 8 y 20 caracteres</mat-error>
+                }
               </mat-form-field>
-              @if (loginFormTeacher.touched && loginFormTeacher.invalid) {
-                <mat-error class="error" >
-                  Completa correctamente todos los campos
-                </mat-error>
-              }
               <p class="forget__password" routerLink="/auth/recover" > Olvide mi contraseña</p>
               <button type="submit"
                 mat-flat-button
