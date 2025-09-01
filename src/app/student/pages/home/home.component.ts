@@ -76,6 +76,18 @@ export class HomeComponent implements OnDestroy {
   modelosListos = false;
   earThreshold = 0.2;
   lastElapsedSent: number | null = null;
+  private audio: HTMLAudioElement | null = null; // referencia global
+
+  // NUEVAS PROPIEDADES PARA CONTROL DE TIEMPO
+  private somnolenceStartTime: number | null = null;
+  private absenceStartTime: number | null = null;
+  private phoneStartTime: number | null = null;
+  
+  // Umbrales de tiempo en milisegundos
+  private readonly SOMNOLENCE_THRESHOLD_MS = 3000; // 3 segundos
+  private readonly ABSENCE_THRESHOLD_MS = 5000;    // 5 segundos
+  private readonly PHONE_THRESHOLD_MS = 2000;      // 2 segundos
+
 
 
   attention:AttentionInfo = {
@@ -103,8 +115,15 @@ export class HomeComponent implements OnDestroy {
   minutesAbsent = 0;
   minutesUsePhone = 0;
   minuteCounter = 0;
+  
 
   async activarCamara() {
+    // if (this.isCameraActive) {
+    //   this.isCameraActive = false;
+    //   this.conected = false;
+    //   clearInterval(this.videoInterval)
+      
+    // };
     const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480, facingMode: 'user' } });
     this.videoRef.nativeElement.srcObject = stream;
     this.videoRef.nativeElement.play();
@@ -124,10 +143,10 @@ export class HomeComponent implements OnDestroy {
 
     this.objectDetector = await ObjectDetector.createFromOptions(vision, {
       baseOptions: { 
-        modelAssetPath: '/models/efficientdet_lite0.tflite',
+        modelAssetPath: '/models/efficientdet_lite0_32.tflite',
         delegate:'GPU'
        },
-      scoreThreshold: 0.1,
+      scoreThreshold: 0.70,
       runningMode: 'VIDEO',
        categoryAllowlist: ['person', 'cell phone'],
     });
@@ -182,7 +201,7 @@ export class HomeComponent implements OnDestroy {
   }
 
   async iniciarAnalisis() {
-    this.videoInterval = setInterval(() => this.detectFrame(), 10000); // cada 10 seg
+    this.videoInterval = setInterval(() => this.detectFrame(), 1000); // cada 10 seg
   }
 
   async detectFrame() {
@@ -192,12 +211,12 @@ export class HomeComponent implements OnDestroy {
     const now = performance.now();
     
     try{
-        const faceResult: FaceLandmarkerResult = await this.faceLandmarker.detectForVideo(video, now);
+        const faceResult: FaceLandmarkerResult = this.faceLandmarker.detectForVideo(video, now);
         const objectResult: ObjectDetectorResult = await this.objectDetector.detectForVideo(video, now);
         console.log("obj restult ",objectResult)
     
-        this.evaluateSomnolence(faceResult);
-        this.evaluateObjects(objectResult);
+        this.evaluateSomnolence(faceResult, now);
+        this.evaluateObjects(objectResult, now);
     }
     catch(e){
         console.log("Error al detectar objetos o somnolencia: ", e);
@@ -210,8 +229,8 @@ export class HomeComponent implements OnDestroy {
         
     }    
   }
-  
-  evaluateSomnolence(result: FaceLandmarkerResult) {
+  //TODO CONTROLAR EL TIEMPO PARA MOSTRAR EN PANTALLA DEL USUARIO
+  evaluateSomnolence(result: FaceLandmarkerResult,currentTime:number) {
     if (result.faceLandmarks.length === 0) return;
     const [leftEAR, rightEAR] = this.getEyesEAR(result.faceLandmarks[0]);
     const avgEAR = (leftEAR + rightEAR) / 2;
@@ -232,15 +251,20 @@ export class HomeComponent implements OnDestroy {
   }
   evaluateObjects(resultObj: ObjectDetectorResult) {
     console.log("detections ", resultObj.detections)
-    if(resultObj.detections.length === 0 ) return;
-    const hasPhone = resultObj.detections.some(d => d.categories[0].categoryName === 'cell phone');
-    const hasPerson = resultObj.detections.some(d => d.categories[0].categoryName === 'person');
+    // if(resultObj.detections.length === 0 ) return;
+    let hasPhone = resultObj.detections.some(d => {
+      return d.categories[0].categoryName === 'cell phone'
     
-    console.log("hay person ",hasPerson,)
+    });
+    let hasPerson = resultObj.detections.some(d => {
+      console.log(" has person: ",d)
+      return d.categories[0].categoryName === 'person'});
+    
+    console.log("hay person ",hasPerson)
     console.log("has phone init ",hasPhone)
     //
     
-    if (hasPerson) {
+    if (!hasPerson) {
         this.minutesAbsent++;
         if (this.minutesAbsent >= 1)  {
             this.isAbsent = true;
@@ -288,12 +312,27 @@ export class HomeComponent implements OnDestroy {
   }
 
   alerta(msg: string) {
-    const audio = new Audio('/alerts/alert.mp3');
-    audio.play();
-    this.snackBar.open(msg, 'OK', { duration: 5000 }).onAction().subscribe(() => 
-      {
-        audio.pause()
+
+     // Si no hay audio creado, lo inicializamos
+    if (!this.audio) {
+      this.audio = new Audio('/alerts/alert.mp3');
+    }
+
+    // Solo reproducimos si NO está sonando ya
+    if (this.audio.paused) {
+      this.audio.currentTime = 0; // opcional: reinicia el sonido
+      this.audio.play();
+    }
+
+    // Mostramos el snackbar
+    this.snackBar.open(msg, 'OK', { duration: 5000 })
+      .onAction()
+      .subscribe(() => {
+        if (this.audio) {
+          this.audio.pause();
+        }
       });
+
   }
 
   pushActividad(actividad: string, time: number) {
