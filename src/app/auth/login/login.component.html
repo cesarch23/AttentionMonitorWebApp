@@ -5,7 +5,7 @@
         <p>Por favor ingrese sus datos</p>
       </div>
       <div class="taps">
-        <mat-tab-group class="tap__group" dynamicHeight>
+        <mat-tab-group class="tap__group" dynamicHeight animationDuration="0ms">
           <mat-tab [disabled]="tabIsDisable" label="Estudiante"  class="tap__item" >
             <form action="#" [formGroup]="loginFormStudent" class="form" (ngSubmit)="onSubmitStudent()">
               <mat-form-field class="form__group">
