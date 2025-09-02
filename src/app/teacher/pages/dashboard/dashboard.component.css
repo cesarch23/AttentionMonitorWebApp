@@ -15,8 +15,8 @@
     border-radius: 8px;
   
 }
-.page .page__header .inpu{
-    width: min-content;
+.page .page__header .formfield-input{
+    min-width: 350px;
 } 
 .page .page__header .page__group span{
     color: var(--color-grey-500);

@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, signal, Signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, Signal } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
@@ -12,6 +12,7 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AbsentChart, LineChart, PhoneLineChart, RequestStatus, Session } from '../../../core/models/model.interface';
 import { NotificationService } from '../../../core/services/notification.service';
 import { AttentionService } from '../../../core/services/attention.service';
+import { DataService } from '../../../core/services/data.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -30,7 +31,7 @@ import { AttentionService } from '../../../core/services/attention.service';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
-export class DashboardComponent implements OnDestroy {
+export class DashboardComponent implements OnDestroy,OnInit {
     //nivelesAtencion=[80, 85, 75, 70, 60, 65, 68, 70, 75, 78, 80, 82, 85];
     
     conected: boolean= false;
@@ -53,12 +54,14 @@ export class DashboardComponent implements OnDestroy {
     absentRequest:RequestStatus = 'init'
     messageErrorAbsent:string = 'Ocurrio un error';
     
-   
-
-
     private sessionServ = inject(SessionsService)
     private attentionServ = inject(AttentionService)
     private noticationServ = inject(NotificationService)
+    private dataServ = inject(DataService)
+
+    ngOnInit(): void {
+      this.dataServ.idSession$.subscribe(sessionId=> this.sessionId.setValue(sessionId || '') )
+    }
 
     conectarSesion(){
       this.sessionId.markAsTouched();
