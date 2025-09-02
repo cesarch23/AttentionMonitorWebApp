@@ -13,10 +13,11 @@ import {MatTooltip} from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
 import { SessionDialogComponent } from '../session-dialog/session-dialog.component';
 import { DatePipe } from '@angular/common';
-import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
+import {ClipboardModule} from '@angular/cdk/clipboard';
 import { DeleteSessionDialogComponent } from '../delete-session-dialog/delete-session-dialog.component';
 import { Router } from '@angular/router';
 import { DataService } from '../../../core/services/data.service';
+import { NotificationService } from '../../../core/services/notification.service';
 
 
 @Component({
@@ -33,6 +34,7 @@ import { DataService } from '../../../core/services/data.service';
     DurationPipe,
     SessionStatusPipe,
     DatePipe,
+    ClipboardModule
   ],
   templateUrl: './sessions-table.component.html',
   styleUrl: './sessions-table.component.css'
@@ -46,6 +48,7 @@ export class SessionsTableComponent implements AfterViewInit,OnInit {
   private dialog = inject(MatDialog);
   private router = inject(Router)
   private dataServ = inject(DataService)
+  private noticationServ = inject(NotificationService)
   sessionDataSource = new MatTableDataSource<Session>()
   
   constructor(){
@@ -128,6 +131,12 @@ export class SessionsTableComponent implements AfterViewInit,OnInit {
     this.dataServ.setIdSession(idSession);
     this.router.navigateByUrl("/admin/dashboard");
   }
-  
+  showCopyMessage(copied: boolean) {
+    if (copied) {
+      this.noticationServ.show('Código copiado!','success',2)
+    }else{
+      this.noticationServ.show('No se pudo copiar el código','warning',2)
+    }
+  }
 
 }
