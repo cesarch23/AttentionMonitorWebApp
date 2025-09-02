@@ -28,11 +28,11 @@ export class DeleteSessionDialogComponent {
       next:(isDeleted =>{
         this.sessionRequestStatus = 'success'
         if(isDeleted){
-          this.notificationServ.show('El curso fue eliminado','success')
+          this.notificationServ.show('La sesión fue eliminada','success')
           this.dialogRef.close({delete:true})
         }
         else {
-          this.notificationServ.show('El curso no fue eliminado','error')
+          this.notificationServ.show('No se pudo eliminar la sesión','error')
         }
       }),
       error:(errorMessage)=>{
