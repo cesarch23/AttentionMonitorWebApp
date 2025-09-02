@@ -15,6 +15,8 @@ import { SessionDialogComponent } from '../session-dialog/session-dialog.compone
 import { DatePipe } from '@angular/common';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { DeleteSessionDialogComponent } from '../delete-session-dialog/delete-session-dialog.component';
+import { Router } from '@angular/router';
+import { DataService } from '../../../core/services/data.service';
 
 
 @Component({
@@ -42,6 +44,8 @@ export class SessionsTableComponent implements AfterViewInit,OnInit {
   courseId = input<string>("")
   sessionColumns = ['sessionId','course','description','date','startHours', 'duracion','estado','numberStudentConected','acciones'] 
   private dialog = inject(MatDialog);
+  private router = inject(Router)
+  private dataServ = inject(DataService)
   sessionDataSource = new MatTableDataSource<Session>()
   
   constructor(){
@@ -119,6 +123,10 @@ export class SessionsTableComponent implements AfterViewInit,OnInit {
              this.sessionDataSource.data = this.sessionDataSource.data.filter(s=>s.sessionId!==session.sessionId)
           }
       });
+  }
+  showDashboard(idSession:string){
+    this.dataServ.setIdSession(idSession);
+    this.router.navigateByUrl("/admin/dashboard");
   }
   
 
