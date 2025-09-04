@@ -1,17 +1,23 @@
 <div class="home">
     <div class="home__header">
-        <mat-form-field>
+        <mat-form-field class="formfield-input">
             <mat-label>Codigo de la sesion</mat-label>
             <input type="text" matInput required placeholder="Codigo de la sesion" [formControl]="sessionId">
         </mat-form-field>
-        <button mat-flat-button (click)="conectToSession()" [disabled]="!isCameraActive" > Conectar </button>
+        @if(!conected){
+            <button mat-flat-button (click)="conectToSession()" [disabled]="!isCameraActive" > Conectar </button>
+        }@else {
+            <button mat-flat-button (click)="disconectToSession()" [disabled]="!isCameraActive" > Desconectar </button>
+        }
     </div>
     <div class="home__content">
         <div class="home__camara-container">
             <div class="home__card">
                 <video class="video" #video autoplay playsinline muted></video>
             </div>
-            <button mat-flat-button (click)="activarCamara()"> {{ conected ? 'Desactivar camara':'Activar camara' }} </button>
+            @if(!isCameraActive){
+                <button mat-flat-button (click)="activarCamara()"> Activar camara </button>
+            }
             <!-- @if(errorMessage){
                 <p class="error-message">
                   {{ errorMessage }}

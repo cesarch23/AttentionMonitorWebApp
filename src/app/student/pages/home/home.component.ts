@@ -10,9 +10,6 @@ import {
   FilesetResolver, 
   FaceLandmarker, 
   ObjectDetector, 
-  Detection, 
-  FaceLandmarkerOptions, 
-  ObjectDetectorOptions, 
   FaceLandmarkerResult,
   ObjectDetectorResult,
   NormalizedLandmark} from '@mediapipe/tasks-vision';
@@ -76,17 +73,16 @@ export class HomeComponent implements OnDestroy {
   modelosListos = false;
   earThreshold = 0.2;
   lastElapsedSent: number | null = null;
-  private audio: HTMLAudioElement | null = null; // referencia global
+  private audio: HTMLAudioElement | null = null
 
-  // NUEVAS PROPIEDADES PARA CONTROL DE TIEMPO
-  private somnolenceStartTime: number | null = null;
-  private absenceStartTime: number | null = null;
-  private phoneStartTime: number | null = null;
+  private somnolenceStartTime: DateTime | null = null;
+  private absenceStartTime: DateTime | null = null;
+  private phoneStartTime: DateTime | null = null;
   
   // Umbrales de tiempo en milisegundos
-  private readonly SOMNOLENCE_THRESHOLD_MS = 3000; // 3 segundos
-  private readonly ABSENCE_THRESHOLD_MS = 5000;    // 5 segundos
-  private readonly PHONE_THRESHOLD_MS = 2000;      // 2 segundos
+  private readonly SOMNOLENCE_THRESHOLD_S = 120; // 2 minutos = 120 segundos
+  private readonly ABSENCE_THRESHOLD_S = 120;    // 2 minutos
+  private readonly PHONE_THRESHOLD_S = 180;      // 3 minutos
 
 
 
@@ -107,23 +103,12 @@ export class HomeComponent implements OnDestroy {
 
    @ViewChild('video') videoRef!: ElementRef<HTMLVideoElement>;
 
-  // Estados
+  // States
   isSomnolence = false;
   isAbsent = false;
   usePhone = false;
-  minutesSomnolence = 0;
-  minutesAbsent = 0;
-  minutesUsePhone = 0;
-  minuteCounter = 0;
-  
 
   async activarCamara() {
-    // if (this.isCameraActive) {
-    //   this.isCameraActive = false;
-    //   this.conected = false;
-    //   clearInterval(this.videoInterval)
-      
-    // };
     const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480, facingMode: 'user' } });
     this.videoRef.nativeElement.srcObject = stream;
     this.videoRef.nativeElement.play();
@@ -146,7 +131,7 @@ export class HomeComponent implements OnDestroy {
         modelAssetPath: '/models/efficientdet_lite0_32.tflite',
         delegate:'GPU'
        },
-      scoreThreshold: 0.70,
+      scoreThreshold: 0.45,
       runningMode: 'VIDEO',
        categoryAllowlist: ['person', 'cell phone'],
     });
@@ -195,104 +180,124 @@ export class HomeComponent implements OnDestroy {
         this.notificationServ.show(messageError,'error')
       }
     })
-
-    
-
   }
 
   async iniciarAnalisis() {
-    this.videoInterval = setInterval(() => this.detectFrame(), 1000); // cada 10 seg
+    this.videoInterval = setInterval(() => {
+      this.detectFrame()
+    }, 2000); // cada 5 seg
   }
 
   async detectFrame() {
     if (!this.modelosListos) return;
-    console.log("modelos listos para deteccion")
+    // console.log("modelos listos para deteccion")
     const video = this.videoRef.nativeElement;
     const now = performance.now();
     
     try{
+        const now2 = DateTime.now()
         const faceResult: FaceLandmarkerResult = this.faceLandmarker.detectForVideo(video, now);
         const objectResult: ObjectDetectorResult = await this.objectDetector.detectForVideo(video, now);
-        console.log("obj restult ",objectResult)
+        // console.log("obj restult ",objectResult)
     
-        this.evaluateSomnolence(faceResult, now);
-        this.evaluateObjects(objectResult, now);
+        this.evaluateSomnolence(faceResult, now2);
+        this.evaluateObjects(objectResult, now2);
+        const elapsedMinutes = this.getElapsedMinutesIfMultipleOfTen();
+        // console.log("after elapsed: ",elapsedMinutes) 
+
+        if( elapsedMinutes !==null ){
+            this.enviarAttentionInfo(elapsedMinutes);
+            this.resetAttentionInfo();     
+        } 
     }
     catch(e){
-        console.log("Error al detectar objetos o somnolencia: ", e);
-    }
-    const elapsedMinutes = this.getElapsedMinutesIfMultipleOfTen();
-
-    if( elapsedMinutes !==null ){
-        this.enviarAttentionInfo(elapsedMinutes);
-        this.resetAttentionInfo();
-        
-    }    
+        console.log("Error al detectar objetos o somnolencia ");
+    }   
   }
-  //TODO CONTROLAR EL TIEMPO PARA MOSTRAR EN PANTALLA DEL USUARIO
-  evaluateSomnolence(result: FaceLandmarkerResult,currentTime:number) {
+
+  evaluateSomnolence(result: FaceLandmarkerResult,currentTime:DateTime) {
     if (result.faceLandmarks.length === 0) return;
     const [leftEAR, rightEAR] = this.getEyesEAR(result.faceLandmarks[0]);
     const avgEAR = (leftEAR + rightEAR) / 2;
 
     if (avgEAR < this.earThreshold) {
-      this.minutesSomnolence++;
-      if (this.minutesSomnolence >= 1 ) {
+      if (this.somnolenceStartTime === null) {
+        this.somnolenceStartTime = currentTime;
+      }
+      const somnolenceTime = currentTime.diff(this.somnolenceStartTime, 'seconds').seconds;
+      if (somnolenceTime >= this.SOMNOLENCE_THRESHOLD_S && !this.isSomnolence) {
         this.isSomnolence = true;
         this.attention.isSomnolence = true;
-        this.attention.minutesSomnolence = this.minutesSomnolence*6/60;        
-        this.pushActividad('Somnolencia', this.minutesSomnolence*6/60)
         this.alerta("Somolencia detectada ")
       }
     } else {
-      this.minutesSomnolence = 0;
+      // Ojos abiertos
+      if (this.somnolenceStartTime !== null && this.isSomnolence) {
+        // Calcular tiempo total de somnolencia y agregarlo al acumulado
+        const totalSomnolenceTime = currentTime.diff(this.somnolenceStartTime,'minutes').minutes;
+        this.attention.minutesSomnolence += totalSomnolenceTime;
+
+        if(this.attention.minutesSomnolence>0)
+          this.pushActividad('Somnolencia', this.attention.minutesSomnolence)
+      }
+      this.somnolenceStartTime = null;
       this.isSomnolence = false;
     }
   }
-  evaluateObjects(resultObj: ObjectDetectorResult) {
-    console.log("detections ", resultObj.detections)
-    // if(resultObj.detections.length === 0 ) return;
-    let hasPhone = resultObj.detections.some(d => {
-      return d.categories[0].categoryName === 'cell phone'
+  evaluateObjects(resultObj: ObjectDetectorResult, currentTime:DateTime) {
+    // console.log("detections ", resultObj.detections)
+    let hasPhone = resultObj.detections.some(d =>d.categories[0].categoryName === 'cell phone');
+    let hasPerson = resultObj.detections.some(d =>d.categories[0].categoryName === 'person');
     
-    });
-    let hasPerson = resultObj.detections.some(d => {
-      console.log(" has person: ",d)
-      return d.categories[0].categoryName === 'person'});
-    
-    console.log("hay person ",hasPerson)
-    console.log("has phone init ",hasPhone)
-    //
+    // console.log("hay person: ",hasPerson)
+    // console.log("has phone: ",hasPhone)
     
     if (!hasPerson) {
-        this.minutesAbsent++;
-        if (this.minutesAbsent >= 1)  {
-            this.isAbsent = true;
+        if (this.absenceStartTime === null) {
+          this.absenceStartTime = currentTime;
+        }
+        const absenceTime = currentTime.diff(this.absenceStartTime,'seconds').seconds;
+
+        if (absenceTime >= this.ABSENCE_THRESHOLD_S && !this.isAbsent)  {
             this.attention.isAbsent = true;
-            this.attention.minutesAbsent = this.minutesAbsent*6/60;
-            this.pushActividad('Ausencia', this.minutesAbsent);
+            this.isAbsent = true;         
             this.alerta('Ausencia detectada');
-            
         }
             
     } else {
-      this.minutesAbsent = 0;
+      //Persona presente
+      if (this.absenceStartTime !== null && this.isAbsent) {
+        const totalAbsenceTime = currentTime.diff(this.absenceStartTime,'minutes').minutes;//EN MINUTOS
+        this.attention.minutesAbsent += totalAbsenceTime;
+        if(this.attention.minutesAbsent>0)
+          this.pushActividad('Ausencia', this.attention.minutesAbsent);
+      }
+      this.absenceStartTime = null
       this.isAbsent = false;
     }
 
     if (hasPhone) {
-      this.minutesUsePhone++;
-      console.log("use phone ",this.usePhone)
-      if (!this.usePhone) {
-          this.usePhone = true;
-          this.attention.usePhone = true;
-          this.attention.minutesUsePhone = this.minutesUsePhone*6/60;
-          this.pushActividad('Uso de celular', this.minutesUsePhone);
-          this.alerta('Uso de celular detectado');
+      // console.log("use phone ",this.usePhone)
+      if (this.phoneStartTime === null) {
+        this.phoneStartTime = currentTime
+      }
+      const phoneTime = currentTime.diff(this.phoneStartTime,'seconds').seconds;
+
+      if (phoneTime >= this.PHONE_THRESHOLD_S && !this.usePhone) {
+          this.usePhone = true
+          this.attention.usePhone = true
+          this.alerta('Uso de celular detectado')
       }
     } else {
-      this.usePhone = false;
-      this.minutesUsePhone = 0;
+      //No hay teléfono - reset del temporizador
+      if (this.phoneStartTime !== null && this.usePhone) {
+        const totalPhoneTime = currentTime.diff(this.phoneStartTime,'minutes').minutes;// cambiar a minutos
+        this.attention.minutesUsePhone += totalPhoneTime;
+        if(this.attention.minutesUsePhone>0)
+            this.pushActividad('Uso de celular', this.attention.minutesUsePhone)
+      }
+      this.phoneStartTime = null
+      this.usePhone = false
     }
   }
   getEyesEAR(landmarks: NormalizedLandmark[]): [number, number] {
@@ -320,12 +325,11 @@ export class HomeComponent implements OnDestroy {
 
     // Solo reproducimos si NO está sonando ya
     if (this.audio.paused) {
-      this.audio.currentTime = 0; // opcional: reinicia el sonido
       this.audio.play();
     }
 
     // Mostramos el snackbar
-    this.snackBar.open(msg, 'OK', { duration: 5000 })
+    this.snackBar.open(msg, 'OK', { duration: 10000 })
       .onAction()
       .subscribe(() => {
         if (this.audio) {
@@ -352,7 +356,7 @@ export class HomeComponent implements OnDestroy {
     attentionSend.minutesElapsedInSession = minutesElapsedInSession;
 
     this.attentionServ.registerAttention(attentionSend).subscribe(() => {
-        console.log("envio de datos: ", attentionSend)
+        // console.log("data sended: ", attentionSend)
        
     });
   }
@@ -376,10 +380,7 @@ export class HomeComponent implements OnDestroy {
     this.isSomnolence = false;
     this.isAbsent = false;
     this.usePhone = false;
-    this.minutesSomnolence = 0;
-    this.minutesAbsent = 0;
-    this.minutesUsePhone = 0;
-    this.minuteCounter = 0;
+
   }
   isNowWithinSession(session: Session): boolean {
     const now = DateTime.now();
@@ -415,16 +416,36 @@ export class HomeComponent implements OnDestroy {
 
     const startDateTime = DateTime.fromISO(`${sessionDateStr}T${this.sessionActiva.startHours}`, { zone: ZONE });
     const elapsed = Math.floor(now.diff(startDateTime, 'minutes').minutes);
-    
-    if (elapsed > 0 && elapsed % 2 === 0 && elapsed <= this.sessionActiva.sessionDurationMinutes && elapsed !== this.lastElapsedSent) {
+     //cambiar por 10 para que sea cada 10 minutos 
+    if (elapsed > 0 && elapsed % 10 === 0 && elapsed <= this.sessionActiva.sessionDurationMinutes && elapsed !== this.lastElapsedSent) {
         this.lastElapsedSent = elapsed;
         return elapsed;
     }
-
     return null;
+    
+  }
+  stopCamara(){
+    // Detener cámara
+    this.isCameraActive = false;
+    if (this.videoRef?.nativeElement?.srcObject) {
+      const stream = this.videoRef.nativeElement.srcObject as MediaStream;
+      stream.getTracks().forEach(track => track.stop());
+    }
   }
   ngOnDestroy(): void {
-      clearInterval(this.videoInterval)
+    clearInterval(this.videoInterval)
+    
+    if (this.audio) {
+      this.audio.pause();
+      this.audio = null;
+    }
+    this.stopCamara();
+  }
+  disconectToSession(){
+    clearInterval(this.videoInterval)
+    this.stopCamara();
+    this.conected = false;
+    
   }
 
 }
