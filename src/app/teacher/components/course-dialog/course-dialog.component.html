@@ -8,11 +8,13 @@
             <mat-label>Nombre</mat-label>
             <input matInput type="text" placeholder="Ingrese el nombre" required formControlName="name"
                 name="name" id="name" />
+                @if(courseForm.controls['name'].hasError('required') ){
+                    <mat-error>Este campo es obligatorio</mat-error>
+                }@else if(courseForm.controls['name'].hasError('whitespace')){
+                    <mat-error>No puede contener solo espacios en blanco</mat-error>
+                }
         </mat-form-field>
          
-        @if (courseForm.touched && courseForm.invalid) {
-            <mat-error class="error"> Todos los campos son obligatorios </mat-error>
-        }
         <div class="dialog__actions" mat-dialog-actions>
             <button type="button" mat-button class="form__button"mat-dialog-close>
                 Cancelar

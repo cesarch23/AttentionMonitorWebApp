@@ -7,6 +7,7 @@ import { Course, RequestStatus } from '../../../core/models/model.interface';
 import { NotificationService } from '../../../core/services/notification.service';
 import { CourseService } from '../../../core/services/courses.service';
 import { MatInput, MatInputModule } from '@angular/material/input';
+import { whitespaceValidator } from '../../../shared/utils/whitespace.validator';
 
 @Component({
   selector: 'tacher-course-dialog',
@@ -31,7 +32,7 @@ export class CourseDialogComponent implements OnInit {
     courseRequestStatus:RequestStatus = 'init'
 
     courseForm:FormGroup = new FormGroup({
-      name:new FormControl<string | null>(null,[Validators.required,Validators.minLength(3)])
+      name:new FormControl<string | null>(null,[Validators.required,Validators.minLength(3), whitespaceValidator()])
     })
 
     ngOnInit(): void {
