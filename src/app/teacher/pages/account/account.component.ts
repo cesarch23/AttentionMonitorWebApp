@@ -7,6 +7,7 @@ import { Gender, RequestStatus, TeacherProfile } from '../../../core/models/mode
 import { MatSelectModule } from '@angular/material/select';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
+import { whitespaceValidator } from '../../../shared/utils/whitespace.validator';
 
 @Component({
   selector: 'app-account',
@@ -30,15 +31,15 @@ export class AccountComponent implements OnInit{
   notificationServ = inject(NotificationService)
 
   userForm:FormGroup = new FormGroup({
-    name: new FormControl<string | null>(null,[Validators.required]),
-    maternalLastname: new FormControl<string | null>(null,[Validators.required]),
-    paternalLastname: new FormControl<string | null>(null,[Validators.required]),
-    email: new FormControl<string | null>(null,[Validators.required, Validators.email]),
+    name: new FormControl<string | null>(null,[Validators.required, whitespaceValidator()]),
+    maternalLastname: new FormControl<string | null>(null,[Validators.required, whitespaceValidator()]),
+    paternalLastname: new FormControl<string | null>(null,[Validators.required, whitespaceValidator()]),
+    email: new FormControl<string | null>(null,[Validators.required, Validators.pattern(/^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/)]),
     gender: new FormControl<Gender | null>(null,[Validators.required]),
   })
   passwordForm:FormGroup = new FormGroup({
-    current: new FormControl<string | null>(null,[Validators.required, Validators.maxLength(32)]),
-    novel: new FormControl<string | null>(null,[Validators.required, Validators.maxLength(32)]),
+    current: new FormControl<string | null>(null,[Validators.required, whitespaceValidator(),Validators.minLength(8), Validators.maxLength(20)]),
+    novel: new FormControl<string | null>(null,[Validators.required, whitespaceValidator(),Validators.minLength(8), Validators.maxLength(20)]),
   })
   ngOnInit(): void {
       this.authServ.refreshTeacherProfile().subscribe(profile=>{

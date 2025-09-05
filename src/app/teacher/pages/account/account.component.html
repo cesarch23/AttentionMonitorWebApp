@@ -5,18 +5,35 @@
         <mat-form-field class="form__group">
             <mat-label>Nombre</mat-label>
             <input type="text" matInput required  placeholder="Nombre" formControlName="name">
+            @if( userForm.controls['name'].hasError('required') || 
+                 userForm.controls['name'].hasError('whitespace')){
+                <mat-error>Este campo es obligatorio</mat-error>
+            }
         </mat-form-field>
         <mat-form-field class="form__group">
             <mat-label>Apellido materno</mat-label>
             <input type="text" matInput required  placeholder="Apellido materno" formControlName="maternalLastname" >
+            @if( userForm.controls['maternalLastname'].hasError('required') || 
+                 userForm.controls['maternalLastname'].hasError('whitespace')){
+                <mat-error>Este campo es obligatorio</mat-error>
+            }
         </mat-form-field>
         <mat-form-field class="form__group">
             <mat-label>Apellido paterno</mat-label>
             <input type="text" matInput required  placeholder="Apellido paterno" formControlName="paternalLastname" >
+            @if( userForm.controls['paternalLastname'].hasError('required') || 
+                 userForm.controls['paternalLastname'].hasError('whitespace')){
+                <mat-error>Este campo es obligatorio</mat-error>
+            }
         </mat-form-field>
         <mat-form-field class="form__group">
             <mat-label>Correo electronico</mat-label>
             <input type="text" matInput required  placeholder="Correo electronico" formControlName="email" >
+            @if( userForm.controls['email'].hasError('required')){
+                <mat-error>Este campo es obligatorio</mat-error>
+            }@else if( userForm.controls['email'].hasError('pattern')){
+                <mat-error>Ingrese un correo electronico valido</mat-error>
+            }
         </mat-form-field>
         <mat-form-field class="form__group">
             <mat-label>Genero</mat-label>
@@ -25,11 +42,6 @@
                 <mat-option value="femenino">Femenino</mat-option>
             </mat-select>
         </mat-form-field>
-        @if (userForm.touched && userForm.invalid) {
-            <mat-error class="error" >
-                Completa correctamente todos los campos
-            </mat-error>
-        }
         <button class="form__button" mat-flat-button type="submit" 
         [disabled]=" userForm.touched && !userForm.valid "
          >
@@ -46,10 +58,24 @@
         <mat-form-field class="form__group">
             <mat-label>Contraseña actual</mat-label>
             <input type="password" matInput required  placeholder="Contraseña actual" formControlName="current">
+            @if (passwordForm.controls['current'].hasError('minlength') || 
+                passwordForm.controls['current'].hasError('maxlength')) {
+                  <mat-error>Ingrese entre 8 y 20 caracteres</mat-error>
+                }
+            @else if(passwordForm.controls['current'].hasError('whitespace')){
+                      <mat-error>No puede contener solo espacios en blanco</mat-error>
+                }
         </mat-form-field>
         <mat-form-field class="form__group">
             <mat-label>Nueva contraseña</mat-label>
             <input type="password" matInput required  placeholder="Contraseña nueva" formControlName="novel" >
+            @if (passwordForm.controls['novel'].hasError('minlength') || 
+                passwordForm.controls['novel'].hasError('maxlength')) {
+                  <mat-error>Ingrese entre 8 y 20 caracteres</mat-error>
+                }
+            @else if(passwordForm.controls['novel'].hasError('whitespace')){
+                      <mat-error>No puede contener solo espacios en blanco</mat-error>
+                }
         </mat-form-field>
         <button  class="form__button" mat-flat-button type="submit" 
         [disabled]=" passwordForm.touched && !passwordForm.valid "
