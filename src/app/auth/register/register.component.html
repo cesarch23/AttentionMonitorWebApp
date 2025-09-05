@@ -19,6 +19,9 @@
                   name="name"
                   id="name"
                 />
+                @if(registerFormStudent.controls['name'].hasError('required') || registerFormStudent.controls['name'].hasError('whitespace')){
+                  <mat-error>Este campo es obligatorio</mat-error>
+                }
               </mat-form-field>
               <div class="form__two">
                   <mat-form-field class="form__group">
@@ -32,6 +35,10 @@
                       name="manternal"
                       id="manternal"
                     />
+                    @if(registerFormStudent.controls['maternalLastname'].hasError('required') || 
+                        registerFormStudent.controls['maternalLastname'].hasError('whitespace')){
+                      <mat-error>Este campo es obligatorio</mat-error>
+                    }
                   </mat-form-field>
                   <mat-form-field class="form__group">
                     <mat-label>Apellido paterno</mat-label>
@@ -44,6 +51,10 @@
                       name="paternal"
                       id="paternal"
                     />
+                    @if(registerFormStudent.controls['paternalLastname'].hasError('required') || 
+                        registerFormStudent.controls['paternalLastname'].hasError('whitespace')){
+                      <mat-error>Este campo es obligatorio</mat-error>
+                    }
                   </mat-form-field>
               </div>
               <mat-form-field class="form__group">
@@ -64,6 +75,9 @@
                   name="email"
                   id="email"
                 />
+                @if(registerFormStudent.controls['email'].hasError('required')){
+                  <mat-error>Este campo es obligatorio</mat-error>
+                }
                 @if(registerFormStudent.controls['email'].hasError('pattern')){
                   <mat-error>
                     Ingresa un correo válido
@@ -82,13 +96,11 @@
                 @if (registerFormStudent.controls['password'].hasError('minlength') || registerFormStudent.controls['password'].hasError('maxlength')) {
                   <mat-error>Ingrese entre 8 y 20 caracteres</mat-error>
                 }
+                @else if(registerFormStudent.controls['password'].hasError('whitespace')){
+                      <mat-error>No puede ingresar espacios en blanco</mat-error>
+                }
               </mat-form-field>
-              
-              @if (registerFormStudent.touched && registerFormStudent.invalid) {
-                <mat-error class="error" >
-                  Completa correctamente todos los campos obligatorios
-                </mat-error>
-              }
+    
               <button type="submit"
                 mat-flat-button
                 class="form__button"
@@ -116,6 +128,10 @@
                   name="name"
                   id="name"
                 />
+                @if(registerFormTeacher.controls['name'].hasError('required') || 
+                        registerFormTeacher.controls['name'].hasError('whitespace')){
+                      <mat-error>Este campo es obligatorio</mat-error>
+                }
               </mat-form-field>
               <div class="form__two">
                   <mat-form-field class="form__group">
@@ -129,6 +145,10 @@
                       name="manternal"
                       id="manternal"
                     />
+                    @if(registerFormTeacher.controls['maternalLastname'].hasError('required') || 
+                        registerFormTeacher.controls['maternalLastname'].hasError('whitespace')){
+                      <mat-error>Este campo es obligatorio</mat-error>
+                    }
                   </mat-form-field>
                   <mat-form-field class="form__group">
                     <mat-label>Apellido paterno</mat-label>
@@ -141,6 +161,10 @@
                       name="paternal"
                       id="paternal"
                     />
+                    @if(registerFormTeacher.controls['paternalLastname'].hasError('required') || 
+                        registerFormTeacher.controls['paternalLastname'].hasError('whitespace')){
+                      <mat-error>Este campo es obligatorio</mat-error>
+                    }
                   </mat-form-field>
               </div>
               <mat-form-field class="form__group">
@@ -178,12 +202,12 @@
                 @if (registerFormTeacher.controls['password'].hasError('minlength') || registerFormTeacher.controls['password'].hasError('maxlength')) {
                   <mat-error>Ingrese entre 8 y 20 caracteres</mat-error>
                 }
+                @else if(registerFormTeacher.controls['password'].hasError('whitespace')){
+                      <mat-error>No puede ingresar espacios en blanco</mat-error>
+                }
+                
               </mat-form-field>
-              @if (registerFormTeacher.touched && registerFormTeacher.invalid) {
-                <mat-error class="error" >
-                   Completa correctamente todos los campos obligatorios
-                </mat-error>
-              }
+  
               <button type="submit"
                 mat-flat-button
                 class="form__button"

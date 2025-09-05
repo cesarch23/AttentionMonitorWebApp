@@ -10,6 +10,7 @@ import { NotificationService } from '../../core/services/notification.service';
 import { AuthService } from '../../core/services/auth.service';
 import { MatSelectModule } from '@angular/material/select';
 import { AsyncPipe, JsonPipe } from '@angular/common';
+import { whitespaceValidator } from '../../shared/utils/whitespace.validator';
 
 @Component({
   selector: 'app-register',
@@ -40,20 +41,20 @@ export class RegisterComponent {
     constructor(){}
     
      registerFormStudent: FormGroup = new FormGroup({
-      email: new FormControl<null | string>(null, [Validators.required, Validators.pattern(/^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/)]),
-      name: new FormControl<null | string>(null, [Validators.required]),
-      maternalLastname: new FormControl<null | string>(null, [Validators.required]),
-      paternalLastname: new FormControl<null | string>(null, [Validators.required]),
+      email: new FormControl<null | string>(null, [Validators.required ,Validators.pattern(/^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/)]),
+      name: new FormControl<null | string>(null, [Validators.required, whitespaceValidator()]),
+      maternalLastname: new FormControl<null | string>(null, [Validators.required, whitespaceValidator()]),
+      paternalLastname: new FormControl<null | string>(null, [Validators.required, whitespaceValidator()]),
       gender: new FormControl<null | string>(null, [Validators.required]),
-      password: new FormControl < null | string > (null, [Validators.required,Validators.minLength(8), Validators.maxLength(20)]),
+      password: new FormControl < null | string > (null, [Validators.required,whitespaceValidator(),Validators.minLength(8), Validators.maxLength(20)]),
     })
      registerFormTeacher: FormGroup = new FormGroup({
       email: new FormControl<null | string>(null, [Validators.required, Validators.pattern(/^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/)]),
-      name: new FormControl<null | string>(null, [Validators.required]),
-      maternalLastname: new FormControl<null | string>(null, [Validators.required]),
-      paternalLastname: new FormControl<null | string>(null, [Validators.required]),
+      name: new FormControl<null | string>(null, [Validators.required, whitespaceValidator()]),
+      maternalLastname: new FormControl<null | string>(null, [Validators.required, whitespaceValidator()]),
+      paternalLastname: new FormControl<null | string>(null, [Validators.required, whitespaceValidator()]),
       gender: new FormControl<null | string>(null, [Validators.required]),
-      password: new FormControl < null | string > (null, [Validators.required,Validators.minLength(8), Validators.maxLength(20)])
+      password: new FormControl < null | string > (null, [Validators.required, whitespaceValidator(),Validators.minLength(8), Validators.maxLength(20)])
     })
   
     onSubmitStudent(){
