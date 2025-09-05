@@ -20,6 +20,7 @@ import { RequestStatus, Session } from '../../../core/models/model.interface';
 import { SessionsService } from '../../../core/services/sessions.service';
 import { DateTime } from 'luxon';
 import { AuthService } from '../../../core/services/auth.service';
+import { whitespaceValidator } from '../../../shared/utils/whitespace.validator';
 export interface AttentionInfo {
   minutesElapsedInSession: number;
   usePhone: boolean;
@@ -58,7 +59,7 @@ export class HomeComponent implements OnDestroy {
   private snackBar = inject(MatSnackBar);
   private authServ = inject(AuthService)
 
-  sessionId = new FormControl<string | null>(null,Validators.required)
+  sessionId = new FormControl<string | null>(null,[Validators.required,whitespaceValidator()])
   errorMessage = '';
   actividades:{activity:string,time:number}[] = []
   sessionActiva!:Session;
