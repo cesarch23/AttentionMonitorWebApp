@@ -19,7 +19,7 @@
                   name="email"
                   id="email"
                 />
-                @if(loginFormStudent.controls['email'].hasError('required')){
+                @if(loginFormStudent.controls['email'].hasError('required') || loginFormStudent.controls['email'].hasError('whitespace')){
                   <mat-error>Este campo es obligatorio</mat-error>
                 }
                 @if(loginFormStudent.controls['email'].hasError('pattern')){
@@ -35,7 +35,7 @@
                   required
                   formControlName="password"
                 />
-                @if(loginFormStudent.controls['password'].hasError('required')){
+                @if(loginFormStudent.controls['password'].hasError('required') || loginFormStudent.controls['password'].hasError('whitespace')){
                   <mat-error>Este campo es obligatorio</mat-error>
                 }
                 @if (loginFormStudent.controls['password'].hasError('minlength') || loginFormStudent.controls['password'].hasError('maxlength')) {

@@ -8,6 +8,7 @@ import { RequestStatus } from '../../core/models/model.interface';
 import {MatTabsModule} from '@angular/material/tabs';
 import { AuthService } from '../../core/services/auth.service';
 import { NotificationService } from '../../core/services/notification.service';
+import { whitespaceValidator } from '../../shared/utils/whitespace.validator';
 
 
 @Component({
@@ -35,11 +36,11 @@ export class LoginComponent {
   constructor(){}
   
    loginFormStudent: FormGroup = new FormGroup({
-    email: new FormControl<null | string>(null, [Validators.required, Validators.pattern(/^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/)]),
+    email: new FormControl<null | string>(null, [Validators.required,whitespaceValidator(), Validators.pattern(/^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/)]),
     password: new FormControl < null | string > (null, [Validators.required,Validators.minLength(8), Validators.maxLength(20)]),
   })
    loginFormTeacher: FormGroup = new FormGroup({
-    email: new FormControl<null | string>(null, [Validators.required, Validators.pattern(/^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/)]),
+    email: new FormControl<null | string>(null, [Validators.required,whitespaceValidator(), Validators.pattern(/^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/)]),
     password: new FormControl < null | string > (null, [Validators.required,Validators.minLength(8), Validators.maxLength(20)]),
   })
  
