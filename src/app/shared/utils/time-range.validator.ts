@@ -1,4 +1,4 @@
-import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { DateTime } from 'luxon';
 
 /**
@@ -16,8 +16,8 @@ export const timeRangeValidator: ValidatorFn = (formGroup: AbstractControl): Val
 
   if (!startTime.isValid || !endTime.isValid) return null;
 
-  if (endTime <= startTime) {
-    return { invalidTimeRange: 'La hora de fin debe ser mayor que la de inicio' };
+  if (endTime.toMillis() <= startTime.toMillis()) {
+    return { invalidTimeRange: true };
   }
 
   return null;
@@ -32,3 +32,5 @@ export function getDurationInMinutes(startHours: string, endHours: string): numb
 
   return durationInMinutes;
 }
+
+ 

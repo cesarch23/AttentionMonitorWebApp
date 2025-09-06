@@ -14,6 +14,7 @@ import { SessionsService } from '../../../core/services/sessions.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { CourseService } from '../../../core/services/courses.service';
 import { Router } from '@angular/router';
+import { whitespaceValidator } from '../../../shared/utils/whitespace.validator';
 
 @Component({
   selector: 'app-session-dialog',
@@ -45,14 +46,15 @@ export class SessionDialogComponent implements OnInit {
   courses = this.courseServ.courses$
 
   sessionForm:FormGroup = new FormGroup({
-      description: new FormControl< null | string >(null,[Validators.required]),
+      description: new FormControl< null | string >(null,[Validators.required,whitespaceValidator()]),
       startHours: new FormControl< null | string >(null,[Validators.required]),
       endHours: new FormControl< null | string >(null,[Validators.required]),
       date: new FormControl< null | Date>(null,[Validators.required]), 
       courseId: new FormControl< null | string>(null,[Validators.required]), 
     },
     {
-      validators: timeRangeValidator
+      validators: [timeRangeValidator]
+
     }
   )
   constructor(){
@@ -73,6 +75,13 @@ export class SessionDialogComponent implements OnInit {
         date: DateTime.fromISO(date!.toString()).toJSDate(),
         courseId:course?.courseId
       }) 
+  }
+  shouldShowTimeError(): boolean {
+    return !!(
+      this.sessionForm.hasError('invalidTimeRange') &&
+      this.sessionForm.get('startHours')?.touched &&
+      this.sessionForm.get('endHours')?.touched
+    );
   }
   sendSession(){
     this.sessionForm.markAllAsTouched()
