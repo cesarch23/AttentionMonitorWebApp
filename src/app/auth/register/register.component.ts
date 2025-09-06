@@ -22,9 +22,7 @@ import { whitespaceValidator } from '../../shared/utils/whitespace.validator';
     ReactiveFormsModule,
     MatTabsModule,
     RouterLink,
-    MatSelectModule,
-    JsonPipe,
-    AsyncPipe
+    MatSelectModule
 
   ],
   templateUrl: './register.component.html',
@@ -58,10 +56,10 @@ export class RegisterComponent {
     })
   
     onSubmitStudent(){
-      console.log(this.registerFormStudent)
       this.registerFormStudent.markAllAsTouched();
       if(this.registerFormStudent.invalid)
         return;
+      this.tabIsDisable = true;
       const {email,password,name,maternalLastname,paternalLastname,gender }  = this.registerFormStudent.getRawValue();
       this.statusFormStudent = 'loading';
       this.authService.registerAndLoginStudent({email,password,name,maternalLastname,paternalLastname,gender })
@@ -73,8 +71,12 @@ export class RegisterComponent {
           error:(errorMessage)=> {
             this.notificationServ.show(errorMessage,'error');
             this.statusFormStudent = 'failed';
+            this.tabIsDisable = false;
           },
-          complete:()=> this.statusFormStudent = 'init'
+          complete:()=> {
+            this.statusFormStudent = 'init'
+            this.tabIsDisable = false;
+          }
         });
     }
      
@@ -82,6 +84,7 @@ export class RegisterComponent {
       this.registerFormTeacher.markAllAsTouched();
       if(this.registerFormTeacher.invalid)
         return;
+      this.tabIsDisable = true;
       const {email,password,name,maternalLastname,paternalLastname,gender } = this.registerFormTeacher.getRawValue();
       this.statusFormTeacher = 'loading';
       this.authService.registerAndLoginTeacher({email,password,name,maternalLastname,paternalLastname,gender})
@@ -93,8 +96,12 @@ export class RegisterComponent {
           error:(errorMessage)=> {
             this.notificationServ.show(errorMessage,'error');
             this.statusFormTeacher = 'failed';
+            this.tabIsDisable = false;
           },
-          complete:()=> this.statusFormTeacher = 'init'
+          complete:()=> {
+            this.statusFormTeacher = 'init';
+            this.tabIsDisable = false;
+          }
         });
         
     }

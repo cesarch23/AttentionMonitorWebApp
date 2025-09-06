@@ -29,6 +29,7 @@ export class LoginComponent {
   statusFormStudent:RequestStatus = 'init';
   statusFormTeacher:RequestStatus = 'init';
   tabIsDisable:boolean = false;
+ 
   private notificationServ = inject( NotificationService );
   private router = inject(Router);
   private authService = inject(AuthService)
@@ -49,6 +50,7 @@ export class LoginComponent {
     this.loginFormStudent.markAllAsTouched();
     if(this.loginFormStudent.invalid)
       return;
+    this.tabIsDisable = true;
     const {email,password } = this.loginFormStudent.getRawValue();
     this.statusFormStudent = 'loading';
     this.authService.login(email,password).subscribe({
@@ -59,8 +61,12 @@ export class LoginComponent {
         error:(errorMessage)=> {
           this.notificationServ.show(errorMessage,'error');
           this.statusFormStudent = 'failed';
+          this.tabIsDisable = false;
         },
-        complete:()=> this.statusFormStudent = 'init'
+        complete:()=> {
+          this.statusFormStudent = 'init'
+          this.tabIsDisable = false;
+        }
       });
      
 
@@ -70,6 +76,7 @@ export class LoginComponent {
     this.loginFormTeacher.markAllAsTouched();
     if(this.loginFormTeacher.invalid)
       return;
+    this.tabIsDisable = true;
     const {email,password } = this.loginFormTeacher.getRawValue();
     this.statusFormTeacher = 'loading';
     this.authService.login(email,password).subscribe({
@@ -80,8 +87,12 @@ export class LoginComponent {
         error:(errorMessage)=> {
           this.notificationServ.show(errorMessage,'error');
           this.statusFormTeacher = 'failed';
+          this.tabIsDisable = false;
         },
-        complete:()=> this.statusFormTeacher = 'init'
+        complete:()=> {
+          this.statusFormTeacher = 'init';
+          this.tabIsDisable = false;
+        }
       });
       
   }
