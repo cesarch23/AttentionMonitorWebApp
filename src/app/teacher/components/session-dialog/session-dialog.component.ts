@@ -79,8 +79,8 @@ export class SessionDialogComponent implements OnInit {
   shouldShowTimeError(): boolean {
     return !!(
       this.sessionForm.hasError('invalidTimeRange') &&
-      this.sessionForm.get('startHours')?.touched &&
-      this.sessionForm.get('endHours')?.touched
+      (this.sessionForm.get('startHours')?.touched ||
+      this.sessionForm.get('endHours')?.touched)
     );
   }
   sendSession(){
