@@ -128,6 +128,9 @@ export class SessionsService {
         if(error.status === HttpStatusCode.NotFound){
             return throwError(()=> new Error('La sesion aun no fue creada'))
         }
+        if(error.status === HttpStatusCode.BadRequest){
+            return throwError(()=> new Error('No se pudo conectar. Verifica el codigo de la sesión'))
+        }
         return throwError(()=> new Error('Ups algo salio mal, intentelo más tarde'))
       })
     );

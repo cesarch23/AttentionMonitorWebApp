@@ -3,7 +3,9 @@
         <mat-form-field class="formfield-input">
             <mat-label>Codigo de la sesión</mat-label>
             <input matInput required type="text" placeholder="Codigo de la sesion" class="input" [formControl]="sessionId" >
-            
+            @if(sessionId.hasError('required') || sessionId.hasError('whitespace')){
+                <mat-error>Este campo es obligatorio</mat-error>
+            }
         </mat-form-field>
         @if (conected) {
             <div class="page__group">

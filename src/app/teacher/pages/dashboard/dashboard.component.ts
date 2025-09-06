@@ -13,6 +13,7 @@ import { AbsentChart, LineChart, PhoneLineChart, RequestStatus, Session } from '
 import { NotificationService } from '../../../core/services/notification.service';
 import { AttentionService } from '../../../core/services/attention.service';
 import { DataService } from '../../../core/services/data.service';
+import { whitespaceValidator } from '../../../shared/utils/whitespace.validator';
 
 @Component({
   selector: 'app-dashboard',
@@ -36,7 +37,7 @@ export class DashboardComponent implements OnDestroy,OnInit {
     
     conected: boolean= false;
     session = signal<Session | null>(null);
-    sessionId = new FormControl<string | null>(null,Validators.required)
+    sessionId = new FormControl<string | null>(null,[Validators.required,whitespaceValidator()])
     
     phoneUseData:PhoneLineChart | null = null;
     phoneRequest:RequestStatus = 'init'
@@ -70,7 +71,6 @@ export class DashboardComponent implements OnDestroy,OnInit {
       if(!id) return;
       this.sessionServ.getSessionById(id).subscribe({
         next:(session)=>{
-          console.log("sesion de la peticion",session)
           this.session.update(()=>session)
           this.conected = true;
           this.noticationServ.show('Conectado. Espere mientra obtenemos los datos','success')
