@@ -8,7 +8,7 @@
             }
         </mat-form-field>
         @if(!conected){
-            <button mat-flat-button (click)="conectToSession()" [disabled]="!isCameraActive" > Conectar </button>
+            <button mat-flat-button (click)="conectToSession()" [disabled]="!isCameraActive || sessionId.invalid" > Conectar </button>
         }@else {
             <button mat-flat-button (click)="disconectToSession()" [disabled]="!isCameraActive" > Desconectar </button>
         }
