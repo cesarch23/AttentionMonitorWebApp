@@ -135,6 +135,10 @@ export class AuthService {
            this.teacherSignal.update(()=>profile)
           }),
         catchError((error: HttpErrorResponse) => {
+          if(error.status === HttpStatusCode.Unauthorized){
+            this.logout();
+            return throwError(()=> new Error('Credenciales inválidas. Vuelve a iniciar sesión'))
+          }
           return throwError(() => new Error('Ups algo salió mal, inténtelo más tarde'));
         })
       );
@@ -161,6 +165,10 @@ export class AuthService {
           this.studentSignal.update(()=>profile)
         }),
         catchError((error: HttpErrorResponse) => {
+          if(error.status === HttpStatusCode.Unauthorized){
+            this.logout();
+            return throwError(()=> new Error('Credenciales inválidas. Vuelve a iniciar sesión'))
+          }
           return throwError(() => new Error('Ups algo salió mal, inténtelo más tarde'));
         })
       );
