@@ -51,7 +51,8 @@ export class DashboardComponent implements OnDestroy,OnInit {
     attenionAvrgRequest:RequestStatus = 'init'
     messageErrorAvrg:string = 'Ocurrio un error';
     
-    absenceInfo = signal<AbsentChart>({data:[100,0]});
+    // absenceInfo = signal<AbsentChart>({data:[90,10]});
+    absenceInfo: number[] = [];
     absentRequest:RequestStatus = 'init'
     messageErrorAbsent:string = 'Ocurrio un error';
     
@@ -115,8 +116,9 @@ export class DashboardComponent implements OnDestroy,OnInit {
       this.attentionServ.getAbsentChart(sessionId).subscribe({
         next:(data)=>{
           this.absentRequest = 'success'
-          this.absenceInfo.set(data)
-        
+          // this.absenceInfo.update((data)=>data)
+          this.absenceInfo = [...data];
+          console.log("estudiantes ausentes: ",data)//%no ausentes,%ausentes
         },
         error:(messageError)=>{
           this.absentRequest = 'failed'
@@ -167,6 +169,7 @@ export class DashboardComponent implements OnDestroy,OnInit {
       this.chargeAttentionAvrgData(this.sessionId.value || '');
     }
     ngOnDestroy(): void {
-        this.absenceInfo.set({data:[100,0]})
+        // this.absenceInfo.set({data:[100,0]})
+        this.absenceInfo = [];
     }
 }

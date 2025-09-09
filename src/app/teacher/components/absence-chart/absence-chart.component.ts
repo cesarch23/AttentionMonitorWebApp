@@ -24,7 +24,9 @@ Chart.register(ArcElement, Tooltip, Legend);
 })
 export class AbsenceChartComponent {
    
-  @Input({ required: true }) absentData!: Signal<AbsentChart | null>;
+  // @Input({ required: true }) absentData!: Signal<number[]>;
+  absentData = input<number [] | null>([]);
+  // attentionData = input<LineChart | null>(null);
   @Input({ required: true }) session= signal<Session | null> (null);
   private dialog = inject(MatDialog);
   
@@ -50,18 +52,18 @@ export class AbsenceChartComponent {
 
 
   public pieChartData = computed<ChartData<'pie', number[], string>>(() => {
-   
+    console.log("recibiendo en chart",this.absentData())
     const input = this.absentData();
-    const values = input?.data?.length === 2
-      ? input.data
+    const values = input?.length === 2
+      ? [...input]
       : [0, 100];
-
+    console.log("data recibido. ",input)
     return {
-      labels: ['Ausentes', 'No Ausentes'],
+      labels: ['Presentes', 'Ausentes'],
       datasets: [
         {
           data: values,
-          backgroundColor: ['#e53935', '#43a047'],
+          backgroundColor: ['#43a047','#e53935'],
         },
       ],
     };
