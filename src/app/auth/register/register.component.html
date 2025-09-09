@@ -24,6 +24,22 @@
                 }
               </mat-form-field>
               <div class="form__two">
+                <mat-form-field class="form__group">
+                    <mat-label>Apellido paterno</mat-label>
+                    <input
+                      matInput
+                      type="text"
+                      placeholder="Ingrese su apellido paterno"
+                      required
+                      formControlName="paternalLastname"
+                      name="paternal"
+                      id="paternal"
+                    />
+                    @if(registerFormStudent.controls['paternalLastname'].hasError('required') || 
+                        registerFormStudent.controls['paternalLastname'].hasError('whitespace')){
+                      <mat-error>Este campo es obligatorio</mat-error>
+                    }
+                  </mat-form-field>
                   <mat-form-field class="form__group">
                     <mat-label>Apellido materno</mat-label>
                     <input
@@ -40,22 +56,7 @@
                       <mat-error>Este campo es obligatorio</mat-error>
                     }
                   </mat-form-field>
-                  <mat-form-field class="form__group">
-                    <mat-label>Apellido paterno</mat-label>
-                    <input
-                      matInput
-                      type="text"
-                      placeholder="Ingrese su apellido paterno"
-                      required
-                      formControlName="paternalLastname"
-                      name="paternal"
-                      id="paternal"
-                    />
-                    @if(registerFormStudent.controls['paternalLastname'].hasError('required') || 
-                        registerFormStudent.controls['paternalLastname'].hasError('whitespace')){
-                      <mat-error>Este campo es obligatorio</mat-error>
-                    }
-                  </mat-form-field>
+                  
               </div>
               <mat-form-field class="form__group">
             <mat-label>Genero</mat-label>
@@ -134,6 +135,22 @@
                 }
               </mat-form-field>
               <div class="form__two">
+                <mat-form-field class="form__group">
+                    <mat-label>Apellido paterno</mat-label>
+                    <input
+                      matInput
+                      type="text"
+                      placeholder="Ingrese su apellido paterno"
+                      required
+                      formControlName="paternalLastname"
+                      name="paternal"
+                      id="paternal"
+                    />
+                    @if(registerFormTeacher.controls['paternalLastname'].hasError('required') || 
+                        registerFormTeacher.controls['paternalLastname'].hasError('whitespace')){
+                      <mat-error>Este campo es obligatorio</mat-error>
+                    }
+                  </mat-form-field>
                   <mat-form-field class="form__group">
                     <mat-label>Apellido materno</mat-label>
                     <input
@@ -150,22 +167,7 @@
                       <mat-error>Este campo es obligatorio</mat-error>
                     }
                   </mat-form-field>
-                  <mat-form-field class="form__group">
-                    <mat-label>Apellido paterno</mat-label>
-                    <input
-                      matInput
-                      type="text"
-                      placeholder="Ingrese su apellido paterno"
-                      required
-                      formControlName="paternalLastname"
-                      name="paternal"
-                      id="paternal"
-                    />
-                    @if(registerFormTeacher.controls['paternalLastname'].hasError('required') || 
-                        registerFormTeacher.controls['paternalLastname'].hasError('whitespace')){
-                      <mat-error>Este campo es obligatorio</mat-error>
-                    }
-                  </mat-form-field>
+                  
               </div>
               <mat-form-field class="form__group">
             <mat-label>Genero</mat-label>
