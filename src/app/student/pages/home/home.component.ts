@@ -21,6 +21,7 @@ import { SessionsService } from '../../../core/services/sessions.service';
 import { DateTime } from 'luxon';
 import { AuthService } from '../../../core/services/auth.service';
 import { whitespaceValidator } from '../../../shared/utils/whitespace.validator';
+import { DecimalPipe } from '@angular/common';
 export interface AttentionInfo {
   minutesElapsedInSession: number;
   usePhone: boolean;
@@ -47,6 +48,7 @@ interface Activity { activity: string; time: number }
     MatPaginatorModule,
     ReactiveFormsModule,
     MatSnackBarModule,
+    DecimalPipe
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'

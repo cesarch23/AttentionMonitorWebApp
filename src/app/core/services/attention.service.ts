@@ -43,8 +43,8 @@ export class AttentionService {
           })
         );
   }
-  getAbsentChart(sessionId:string):Observable<AbsentChart>{
-    return this.http.get<AbsentChart>(`${this.url}/ausencia/${sessionId}`,{ context:setCachingEnabled() }).pipe(
+  getAbsentChart(sessionId:string):Observable<number[]>{
+    return this.http.get<number[]>(`${this.url}/ausencia/${sessionId}`,{ context:setCachingEnabled() }).pipe(
           catchError((error)=>{
             if(error.status === HttpStatusCode.Unauthorized){
               return throwError(()=> new Error('Credenciales inválidas. vuelve a iniciar sesión'))

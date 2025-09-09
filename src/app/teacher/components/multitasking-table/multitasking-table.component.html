@@ -24,7 +24,7 @@
                 </ng-container>
                 <ng-container matColumnDef="minutesUsePhone">
                   <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Tiempo de uso </th>
-                  <td mat-cell *matCellDef="let element"> {{ element.minutesUsePhone }} </td>
+                  <td mat-cell *matCellDef="let element"> {{ element.minutesUsePhone }} minutos </td>
                 </ng-container>
                 <ng-container matColumnDef="description">
                   <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Descripcion</th>
@@ -32,7 +32,7 @@
                 </ng-container>
                 <ng-container matColumnDef="minutesElapsedInSession">
                   <th mat-header-cell *matHeaderCellDef class="sticky" mat-sort-header > Tiempo transcurrido de la sesión</th>
-                  <td mat-cell *matCellDef="let element"> {{ element.minutesElapsedInSession }} </td>
+                  <td mat-cell *matCellDef="let element"> {{ element.minutesElapsedInSession }} minutos </td>
                 </ng-container>
     
                 <tr mat-header-row *matHeaderRowDef="itemsColumns"></tr>
