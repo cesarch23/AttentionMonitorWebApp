@@ -98,7 +98,7 @@ export class AuthService {
     .pipe(
       catchError((error:HttpErrorResponse)=>{
         if(error.status === HttpStatusCode.Conflict){
-          return throwError(()=> new Error('Ya se registro el email'))
+          return throwError(()=> new Error('Ya se registró el email'))
         }
         return throwError(()=> new Error('Ups algo salio mal, intentelo más tarde'))
       })
