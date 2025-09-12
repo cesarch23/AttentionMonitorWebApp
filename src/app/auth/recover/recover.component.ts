@@ -69,7 +69,7 @@ export class RecoverComponent {
             this.userFormVerified.setValue({email,code:null})
             this.updatePasswordForm.setValue({email,password:null})
             this.statusFormStudent = 'success'
-            this.notificationServ.show("Revisa tu correo e ingresa tu codigo de verificacion ",'success');
+            this.notificationServ.show("Revisa tu correo e ingresa tu código de verificación",'success');
           }
         },
         error:(errorMessage)=> {
@@ -93,12 +93,12 @@ export class RecoverComponent {
           this.userCodeVerified = isCodeVerified;
 
           if(!isCodeVerified){
-            this.notificationServ.show("El codigo es incorrecto",'warning');
+            this.notificationServ.show("El código es incorrecto",'warning');
             this.statusFormVerified = 'failed';
           }
           else{
             this.statusFormVerified = 'success'
-            this.notificationServ.show("El codigo es correcto",'success');
+            this.notificationServ.show("El código es correcto",'success');
           }
         },
         error:(errorMessage)=> {

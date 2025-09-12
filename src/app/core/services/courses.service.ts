@@ -62,8 +62,11 @@ export class CourseService {
       retry(1),
       tap(course=>this.coursesSignal.update((courses)=>[...courses,course])),
       catchError((error:HttpErrorResponse)=>{
-        if(error.status === HttpStatusCode.Unauthorized){
+          if(error.status === HttpStatusCode.Unauthorized){
             return throwError(()=> new Error('Credenciales inválidas. Verifica tu correo y contraseña'))
+          }
+          if(error.status === HttpStatusCode.Conflict){
+            return throwError(()=> new Error('El curso ya existe, ingrese otro nombre'))
           }
           return throwError(()=> new Error('Ups algo salio mal, intentelo más tarde')) 
         }
@@ -97,6 +100,9 @@ export class CourseService {
       catchError((error:HttpErrorResponse)=>{
         if(error.status === HttpStatusCode.Unauthorized){
             return throwError(()=> new Error('Credenciales inválidas. Verifica tu correo y contraseña'))
+          }
+          if(error.status === HttpStatusCode.Conflict){
+            return throwError(()=> new Error('El curso ya existe, ingrese otro nombre'))
           }
           return throwError(()=> new Error('Ups algo salio mal, intentelo más tarde')) 
         }
