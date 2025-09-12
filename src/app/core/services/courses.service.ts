@@ -39,6 +39,7 @@ export class CourseService {
       }),
       catchError((error:HttpErrorResponse)=>{
         if(error.status === HttpStatusCode.Unauthorized){
+            this.authService.logout();
             return throwError(()=> new Error('Credenciales inválidas. Verifica tu correo y contraseña'))
           }
           return throwError(()=> new Error('Ups algo salio mal, intentelo más tarde'))
@@ -58,11 +59,20 @@ export class CourseService {
     return this.sendRequestToAdd({name,teacherId});
   }
   updateCourse(name:string, courseId:string ): Observable<Course>{
-    return this.http.put<Course>(`${this.url}/${courseId}`,{name},{context:setCachingEnabled()}).pipe(
+
+    const teacherId = this.authService.teacherProfile$()!.teacherId;
+    if(!teacherId){
+      return this.authService.getTeacherProfile().pipe(
+        switchMap((teacher)=>  this.sendRequestToAdd({name , teacherId: teacher.teacherId } ) ) 
+      )
+    }
+
+    return this.http.put<Course>(`${this.url}/${courseId}`,{name,teacherId},{context:setCachingEnabled()}).pipe(
       retry(1),
       tap(course=>this.coursesSignal.update((courses)=>[...courses,course])),
       catchError((error:HttpErrorResponse)=>{
           if(error.status === HttpStatusCode.Unauthorized){
+            this.authService.logout();
             return throwError(()=> new Error('Credenciales inválidas. Verifica tu correo y contraseña'))
           }
           if(error.status === HttpStatusCode.Conflict){
@@ -82,6 +92,7 @@ export class CourseService {
       }),
       catchError((error:HttpErrorResponse)=>{
         if(error.status === HttpStatusCode.Unauthorized){
+            this.authService.logout();
             return throwError(()=> new Error('Credenciales inválidas. Verifica tu correo y contraseña'))
           }
         if(error.status === HttpStatusCode.Conflict){
@@ -98,7 +109,7 @@ export class CourseService {
       retry(1),
       tap(course=>this.coursesSignal.update((courses)=>[...courses,course])),
       catchError((error:HttpErrorResponse)=>{
-        if(error.status === HttpStatusCode.Unauthorized){
+          if(error.status === HttpStatusCode.Unauthorized){
             return throwError(()=> new Error('Credenciales inválidas. Verifica tu correo y contraseña'))
           }
           if(error.status === HttpStatusCode.Conflict){
