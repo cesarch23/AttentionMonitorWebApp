@@ -101,7 +101,7 @@ export class SessionDialogComponent implements OnInit {
         },this.data.sessionId).subscribe({
           next:(session)=>{
             this.sessionRquestStatus = 'success'
-            this.notificationServ.show('Se actualizo la sesion','success')
+            this.notificationServ.show('Se actualizo la sesión','success')
             this.dialogRef.close({session,updated:true,inserted:false})
             this.sessionForm.reset()
             this.router.navigateByUrl('admin/sesiones')
@@ -125,7 +125,7 @@ export class SessionDialogComponent implements OnInit {
         }).subscribe({
           next:(session)=>{
             this.sessionRquestStatus = 'success'
-            this.notificationServ.show('Se agrego con exito la session','success')
+            this.notificationServ.show('Se agrego con exito la sesión','success')
             this.sessionForm.reset()
             this.dialogRef.close({session,updated:false,inserted:true})
             this.router.navigateByUrl('admin/sesiones')

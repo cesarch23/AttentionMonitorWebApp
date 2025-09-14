@@ -74,7 +74,7 @@ export class DashboardComponent implements OnDestroy,OnInit {
         next:(session)=>{
           this.session.update(()=>session)
           this.conected = true;
-          this.noticationServ.show('Conectado. Espere mientra obtenemos los datos','success')
+          this.noticationServ.show('Conectado','success')
           this.chargeCharts()
         },
         error:(errorMessage)=>{

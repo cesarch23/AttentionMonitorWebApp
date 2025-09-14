@@ -18,9 +18,14 @@
             <p class="text-error"> Ocurrió un error inesperado. Por favor, utilice la opción "Sesiones" en la barra de navegación para intentar nuevamente. </p>
         }
         @else if(sessionStatus ===  'success'){
-            <div class="sessions__table">
-                <teacher-sessions-table [filter]="false" [sessions]="sessions" ></teacher-sessions-table>
-            </div>
+             @if (sessions.length > 0) {
+                 <div class="sessions__table">
+                    <teacher-sessions-table [filter]="false" [sessions]="sessions" ></teacher-sessions-table>
+                 </div>
+            }
+            @else {
+                <p class="text-info"> No cuenta con sesiones para mostrar </p>
+            }  
            
         }
     </div>

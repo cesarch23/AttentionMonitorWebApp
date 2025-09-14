@@ -1,8 +1,8 @@
 <div class="page">
     <div class="page__header">
         <mat-form-field class="formfield-input">
-            <mat-label>Codigo de la sesión</mat-label>
-            <input matInput required type="text" placeholder="Codigo de la sesion" class="input" [formControl]="sessionId" >
+            <mat-label>Código de la sesión</mat-label>
+            <input matInput required type="text" placeholder="Código de la sesión" class="input" [formControl]="sessionId" >
             @if(sessionId.hasError('required') || sessionId.hasError('whitespace')){
                 <mat-error>Este campo es obligatorio</mat-error>
             }
@@ -82,7 +82,7 @@
             </div>
             </div>
          }@else {
-             <p color="warn">Ingrese el codigo de la sesion</p>
+             <p color="warn">Ingrese el cádigo de la sesion</p>
          }
     </div>
 </div>
