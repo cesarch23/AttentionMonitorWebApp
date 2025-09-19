@@ -9,7 +9,7 @@
     
      @if (attentionRequestStatus=== 'success') {
         @if (this.dataSource.data.length <= 0) {
-            <p>No Estudiantes para mostrar</p>
+            <p>No hay estudiantes para mostrar</p>
         }
         @else {
             <table mat-table [dataSource]="dataSource" matSort>
