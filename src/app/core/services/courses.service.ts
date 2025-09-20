@@ -20,7 +20,6 @@ export class CourseService {
   constructor() { }
 
    getCoursesByTeacherId() {
-    this.coursesSignal.update(() =>null as any); // Reset the signal before fetching new data
     const teacherId = this.authService.teacherProfile$()?.teacherId;
     if(!teacherId){
       return this.authService.getTeacherProfile()
