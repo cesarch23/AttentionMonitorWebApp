@@ -20,6 +20,7 @@ export class CourseService {
   constructor() { }
 
    getCoursesByTeacherId() {
+    this.coursesSignal.set([]);
     const teacherId = this.authService.teacherProfile$()?.teacherId;
     if(!teacherId){
       return this.authService.getTeacherProfile()
