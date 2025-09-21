@@ -56,7 +56,7 @@ export class LoginComponent {
     this.authService.login(email,password).subscribe({
         next:()=>{
           this.router.navigateByUrl('/estudiante/home')
-           this.loginFormStudent.reset(); 
+          //  this.loginFormStudent.reset(); 
         },
         error:(errorMessage)=> {
           this.notificationServ.show(errorMessage,'error');
@@ -82,7 +82,7 @@ export class LoginComponent {
     this.authService.login(email,password).subscribe({
         next:()=>{
           this.router.navigateByUrl('/admin/home')
-          this.loginFormTeacher.reset();
+          // this.loginFormTeacher.reset();
         },
         error:(errorMessage)=> {
           this.notificationServ.show(errorMessage,'error');

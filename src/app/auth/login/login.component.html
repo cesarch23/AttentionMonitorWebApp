@@ -47,7 +47,7 @@
               <button type="submit"
                 mat-flat-button
                 class="form__button"
-                [disabled]=" loginFormStudent.touched && !loginFormStudent.valid "
+                [disabled]=" (loginFormStudent.touched && !loginFormStudent.valid) || tabIsDisable "
                >
                @if(statusFormStudent!=='loading'){
                     <span>Iniciar sesión</span>
@@ -99,7 +99,7 @@
               <button type="submit"
                 mat-flat-button
                 class="form__button"
-                [disabled]=" loginFormTeacher.touched && !loginFormTeacher.valid "
+                [disabled]=" (loginFormTeacher.touched && !loginFormTeacher.valid) || tabIsDisable "
                >
                @if(statusFormTeacher!=='loading'){
                     <span>Iniciar sesión</span>

@@ -110,7 +110,7 @@
               <button type="submit"
                 mat-flat-button
                 class="form__button"
-                [disabled]=" registerFormStudent.touched && !registerFormStudent.valid "
+                [disabled]=" (registerFormStudent.touched && !registerFormStudent.valid) || tabIsDisable "
                >
                @if(statusFormStudent!=='loading'){
                     <span>Registrarse</span>
