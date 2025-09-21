@@ -65,8 +65,8 @@ export class RegisterComponent {
       this.authService.registerAndLoginStudent({email,password,name,maternalLastname,paternalLastname,gender })
       .subscribe({
           next:()=>{
-            this.registerFormStudent.reset(); 
             this.router.navigateByUrl('/estudiante/home')
+            // this.registerFormStudent.reset(); 
           },
           error:(errorMessage)=> {
             this.notificationServ.show(errorMessage,'error');
@@ -91,7 +91,7 @@ export class RegisterComponent {
         .subscribe({
           next:()=>{
             this.router.navigateByUrl('/admin/home')
-            this.registerFormTeacher.reset();
+            // this.registerFormTeacher.reset();
           },
           error:(errorMessage)=> {
             this.notificationServ.show(errorMessage,'error');
