@@ -32,8 +32,6 @@ export class CourseTableComponent implements AfterViewInit {
     courseDataSource = new MatTableDataSource<Course>()
     
     constructor(){
-      console.log("iniciando el componente de la tabla course")
-      
       effect(() => {
         const courses$ = this.courses$();     
         this.courseDataSource.data = [...courses$];

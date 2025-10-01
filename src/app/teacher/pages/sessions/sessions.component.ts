@@ -27,7 +27,6 @@ export class SessionsComponent implements OnInit {
   sessions:Session[] = []
   
   constructor(){
-    console.log("iniciado la session componente")
   }
   
   ngOnInit(): void {

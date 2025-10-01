@@ -118,7 +118,6 @@ export class DashboardComponent implements OnDestroy,OnInit {
           this.absentRequest = 'success'
           // this.absenceInfo.update((data)=>data)
           this.absenceInfo = [...data];
-          console.log("estudiantes ausentes: ",data)//%no ausentes,%ausentes
         },
         error:(messageError)=>{
           this.absentRequest = 'failed'
@@ -148,7 +147,6 @@ export class DashboardComponent implements OnDestroy,OnInit {
       }
       this.sessionServ.getSessionById(this.sessionId.value).subscribe({
         next:(session)=>{
-          console.log("sesion de la peticion",session)
           this.session.update(()=>session)
           this.conected = true;
           this.noticationServ.show('Conectado. Espere mientra obtenemos los datos','success')

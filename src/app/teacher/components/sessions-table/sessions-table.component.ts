@@ -52,7 +52,6 @@ export class SessionsTableComponent implements AfterViewInit,OnInit {
   sessionDataSource = new MatTableDataSource<Session>()
   
   constructor(){
-    console.log("iniciando el componente de la tabla",this.sessions())
     effect(() => {
       const sessions = this.sessions();     
       const filter = this.filter();       
@@ -103,9 +102,7 @@ export class SessionsTableComponent implements AfterViewInit,OnInit {
          isEdit:true
       }
     }).afterClosed().subscribe((result: { session?:Session;updated:boolean; inserted:boolean}={inserted:false,updated:false})=>{
-        if(result.updated && result.session){
-          console.log('updatesd resul',result)
-           
+        if(result.updated && result.session){       
           const updatedSession = result.session;
           const updatedSessions = this.sessions().map(s =>{
                 if(s.sessionId === updatedSession.sessionId){

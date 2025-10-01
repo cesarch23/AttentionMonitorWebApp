@@ -49,7 +49,7 @@ export class CoursesComponent {
           }
         }).afterClosed()
         .subscribe((result: { course?:Course;updated:boolean; inserted:boolean}={course:undefined,inserted:false,updated:false})=>{
-          console.log("results recibidos",result.course)
+      
           if(!result) return;
           if(result.inserted && result.course){
             const pastCourse= structuredClone(this.courses)

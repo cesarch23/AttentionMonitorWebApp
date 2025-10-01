@@ -52,12 +52,12 @@ export class AbsenceChartComponent {
 
 
   public pieChartData = computed<ChartData<'pie', number[], string>>(() => {
-    console.log("recibiendo en chart",this.absentData())
+   
     const input = this.absentData();
     const values = input?.length === 2
       ? [...input]
       : [0, 100];
-    console.log("data recibido. ",input)
+    //console.log("data recibido. ",input)
     return {
       labels: ['Presentes', 'Ausentes'],
       datasets: [

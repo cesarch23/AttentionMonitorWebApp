@@ -117,7 +117,7 @@ export class RecoverComponent {
     this.statusUpdatePasswordForm = 'loading';
     this.authService.udpdatePassword(email,password).subscribe({
         next:(isUpdated:boolean)=>{
-          console.log("updated ",isUpdated)
+  
           if(isUpdated){
             this.notificationServ.show("Contraseña actualizada",'success');
             this.statusUpdatePasswordForm = 'success';

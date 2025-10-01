@@ -35,7 +35,6 @@ export class AbsentTableComponent implements OnInit,AfterViewInit {
       next:(attentions)=>{
         this.attentionRequestStatus='success'
         this.dataSource.data = attentions;
-        console.log("attentnion ", attentions)
       },
       error:(messageError)=>{
         this.attentionRequestStatus='failed'
