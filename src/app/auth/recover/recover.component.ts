@@ -93,7 +93,7 @@ export class RecoverComponent {
           this.userCodeVerified = isCodeVerified;
 
           if(!isCodeVerified){
-            this.notificationServ.show("El código de verificación ya expiró",'warning');
+            this.notificationServ.show("Tu código no es correcto o ya caducó. Vuelve a iniciar el proceso para obtener uno nuevo",'error');
             this.statusFormVerified = 'failed';
           }
           else{
