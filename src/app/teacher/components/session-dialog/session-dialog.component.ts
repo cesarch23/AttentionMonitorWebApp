@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { DateTime } from 'luxon';
 import { SessionsService } from '../../../core/services/sessions.service';
 import { NotificationService } from '../../../core/services/notification.service';
@@ -29,6 +30,7 @@ import { whitespaceValidator } from '../../../shared/utils/whitespace.validator'
     FormsModule,
     MatIconModule,
     MatSelectModule,
+    MatTooltipModule,
   ],
   templateUrl: './session-dialog.component.html',
   styleUrl: './session-dialog.component.css'
@@ -36,7 +38,7 @@ import { whitespaceValidator } from '../../../shared/utils/whitespace.validator'
 export class SessionDialogComponent implements OnInit {
   
   sessionRquestStatus:RequestStatus = 'init'
-  
+  minDate: Date = new Date();
   readonly dialogRef = inject(MatDialogRef<SessionDialogComponent>);
   readonly data = inject<SessionDialogData>(MAT_DIALOG_DATA);
   private sessionServ = inject(SessionsService)
@@ -44,6 +46,7 @@ export class SessionDialogComponent implements OnInit {
   private courseServ = inject(CourseService);
   private router = inject(Router);
   courses = this.courseServ.courses$
+  isSessionStarted = false;
 
   sessionForm:FormGroup = new FormGroup({
       description: new FormControl< null | string >(null,[Validators.required,whitespaceValidator()]),
@@ -67,14 +70,34 @@ export class SessionDialogComponent implements OnInit {
 
   }
   initializeForm(){
-      const { description,startHours,endHours,date,course, } = this.data
+      const { description, startHours, endHours, date, course } = this.data;
+      
+      // Convertir la fecha y hora de inicio de la sesión a un objeto DateTime 
+      const sessionDate = DateTime.fromISO(date!.toString());
+      const [hours, minutes] = startHours!.split(':');
+      const sessionStartDateTime = sessionDate.set({
+        hour: parseInt(hours),
+        minute: parseInt(minutes)
+      });
+
+      // Verificar si la sesión ya ha comenzado
+      this.isSessionStarted = sessionStartDateTime <= DateTime.now();
+
       this.sessionForm.reset({
-        description:description,
-        startHours:startHours,
-        endHours:endHours,
-        date: DateTime.fromISO(date!.toString()).toJSDate(),
-        courseId:course?.courseId
-      }) 
+        description: description,
+        startHours: startHours,
+        endHours: endHours,
+        date: sessionDate.toJSDate(),
+        courseId: course?.courseId
+      });
+
+      // Si la sesión ya ha comenzado, deshabilitar los campos que no se deben editar
+      if (this.isSessionStarted) {
+        this.sessionForm.get('courseId')?.disable();
+        this.sessionForm.get('date')?.disable();
+        this.sessionForm.get('startHours')?.disable();
+        this.sessionForm.get('endHours')?.disable();
+      }
   }
   shouldShowTimeError(): boolean {
     return !!(

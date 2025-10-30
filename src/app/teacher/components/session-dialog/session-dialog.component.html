@@ -6,7 +6,7 @@
     <form mat-dialog-content class="form" [formGroup]="sessionForm">
         <mat-form-field class="form__group">
             <mat-label>Descripcion</mat-label>
-            <input matInput type="text" placeholder="Ingrese la descripcion" required formControlName="description"
+            <input matInput type="text" placeholder="Descripcion, ejemplo: Semana 1.2" required formControlName="description"
                 name="description" id="description" />
             @if(sessionForm.controls['description'].hasError('whitespace')){
                   <mat-error>Este campo no puede estar vacío</mat-error>
@@ -16,23 +16,38 @@
         </mat-form-field>
         <mat-form-field class="form__group">
             <mat-label>Hora de inicio(24h - HH:mm)</mat-label>
-            <input matInput type="time" placeholder="Ingrese la hora de inicio" required formControlName="startHours" />
+            <input matInput 
+                type="time" 
+                placeholder="Ingrese la hora de inicio" 
+                required 
+                formControlName="startHours"
+                [matTooltip]="isSessionStarted ? 'No se puede modificar la hora de inicio una vez que la sesión ha comenzado' : ''" />
             @if(sessionForm.controls['startHours'].hasError('required') ){
                  <mat-error>Este campo es obligatorio</mat-error>
             }
         </mat-form-field>
         <mat-form-field class="form__group">
             <mat-label>Hora fin(24h - HH:mm)</mat-label>
-            <input matInput type="time" placeholder="Ingrese la hora de finalizacion" required formControlName="endHours" />
+            <input matInput 
+                type="time" 
+                placeholder="Ingrese la hora de finalizacion" 
+                required 
+                formControlName="endHours"
+                [matTooltip]="isSessionStarted ? 'No se puede modificar la hora de fin una vez que la sesión ha comenzado' : ''" />
             @if(sessionForm.controls['endHours'].hasError('required') ){
                 <mat-error>Este campo es obligatorio</mat-error>
             }
         </mat-form-field>
         <mat-form-field>
             <mat-label>Fecha</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="date" />
+            <input readonly 
+                matInput 
+                [matDatepicker]="picker" 
+                [min]="minDate" 
+                formControlName="date"
+                [matTooltip]="isSessionStarted ? 'No se puede modificar la fecha una vez que la sesión ha comenzado' : ''" />
             <mat-hint>DD/MM/AAAA</mat-hint>
-            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker-toggle matIconSuffix [for]="picker" [disabled]="isSessionStarted"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
             @if(sessionForm.controls['date'].hasError('required') ){
                 <mat-error>Este campo es obligatorio</mat-error>
@@ -40,7 +55,11 @@
         </mat-form-field>
         <mat-form-field>
             <mat-label>Curso</mat-label>
-            <mat-select required formControlName="courseId" placeholder="Seleccione el curso" >
+            <mat-select 
+                required 
+                formControlName="courseId" 
+                placeholder="Seleccione el curso"
+                [matTooltip]="isSessionStarted ? 'No se puede cambiar el curso una vez que la sesión ha comenzado' : ''" >
                 @if (courses().length===0) {
                     <mat-option disabled >No tiene cursos</mat-option>
                 }

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { HttpClient, HttpStatusCode } from '@angular/common/http';
 import { TokenService } from './token.service';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, Observable, retry, throwError } from 'rxjs';
 import { AbsentChart, Attention, LineChart, PhoneLineChart } from '../models/model.interface';
 import { setCachingEnabled } from '../interceptors/token.interceptor';
 import { AuthService } from './auth.service';
@@ -119,6 +119,7 @@ export class AttentionService {
   }
   registerAttention(payload:AttentionInfo):Observable<AttentionInfo>{
     return this.http.post<AttentionInfo>(`${this.url}`,payload,{ context:setCachingEnabled() }).pipe(
+          retry(1),
           catchError((error)=>{
             if(error.status === HttpStatusCode.Unauthorized){
               return throwError(()=> new Error('Credenciales inválidas. vuelve a iniciar sesión'))
